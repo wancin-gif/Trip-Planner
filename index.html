@@ -545,7 +545,6 @@ input::placeholder{color:#9C948D}
 .ticket .code{font-family:var(--hand);font-weight:normal;color:var(--ink);font-size:28px}
 .ticket .t{font-weight:normal;font-size:24px}
 .ticket .dir{display:inline-block;background:var(--mizu);border:2px solid var(--ink);color:var(--ink);border-radius:99px;padding:0 10px;font-size:12.5px;margin-bottom:8px}
-.ticket:nth-child(2) .dir{background:var(--coral)}
 .ticket .tplane{display:inline-block;width:26px;height:26px;vertical-align:-5px}
 
 /* Day switcher */
@@ -817,6 +816,53 @@ button,a,input,select,textarea,label{touch-action:manipulation}
 }
 /* narrow phones (SE / mini) */
 @media(max-width:380px){.hero-title{font-size:26px}.count > div{min-width:62px}.exp-item{grid-template-columns:26px minmax(0,1fr) auto auto auto;gap:6px}}
+
+/* Editable flights */
+.fltoolbar{display:flex;justify-content:flex-end;margin:10px 0}
+.ittools[hidden],.itreset[hidden]{display:none}
+.ticket{grid-template-columns:minmax(0,1fr) auto}
+.ticket .dir{background:var(--yellow)}
+.ticket.go .dir{background:var(--mizu)}
+.ticket.back .dir{background:var(--coral)}
+.ticket.conn .dir{background:var(--green)}
+.ticket .main{min-width:0}
+.ticket .code{overflow-wrap:anywhere}
+.tremark{grid-column:1 / -1;border-top:3px dashed var(--ink);background:var(--yellow-t);padding:10px 16px 12px;font-size:14.5px;line-height:1.6;overflow-wrap:anywhere}
+.tremark b{display:block;font-weight:normal;font-size:13px;color:var(--muted);margin-bottom:2px}
+.tctl{grid-column:1 / -1;display:flex;gap:8px;padding:10px 14px 12px;border-top:2px dashed var(--line);background:var(--bg)}
+.tctl button{border:2px solid var(--ink);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;padding:2px 12px;border-radius:99px;cursor:pointer;min-height:38px}
+.tctl button:first-child{background:var(--mizu)}
+.tctl .del.armed,.tctl .del:hover{background:var(--coral-t);color:var(--chili)}
+.ticket.editable{cursor:pointer;border-style:dashed}
+.ticket.editable:hover{transform:none}
+#flDir button.on[data-v=去程]{background:var(--mizu)} #flDir button.on[data-v=回程]{background:var(--coral)} #flDir button.on[data-v=轉機]{background:var(--green)} #flDir button.on[data-v=其他]{background:var(--yellow)}
+@media(max-width:360px){.ticket .code{font-size:23px}.ticket .t{font-size:20px}.ticket .stub{min-width:82px}}
+
+/* Free hotel list on the 機酒 page */
+#hotelSec{padding-top:18px}
+.hotel-name{font-family:var(--hand);font-size:17px}
+.hotel-name.empty{color:var(--muted)}
+.hotel.editable{cursor:pointer;border-style:dashed}
+.hotel .tctl{border-top:2px dashed var(--line)}
+.htnights{font-size:13.5px;color:var(--ink);margin-top:-4px}
+.htnights:empty{display:none}
+
+/* iOS Safari: date/time inputs have a built-in min width that overflows grid cells */
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;width:100%;box-sizing:border-box;text-align:left;min-height:44px;line-height:1.3}
+input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;margin:0;min-height:1.3em}
+input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-calendar-picker-indicator{margin-left:auto}
+.exp-form .row2 > *,.itrow2 > *,.itrow > *{min-width:0}
+.itrow input[type=time]{width:130px}
+/* Currency converter: stack the two amounts on phones so long numbers fit */
+@media(max-width:520px){
+  .calc-row{grid-template-columns:minmax(0,1fr);gap:6px}
+  .calc-swap{justify-self:center;width:40px;height:40px;font-size:0}
+  .calc-swap::before{content:"⇅";font-size:18px}
+  .calc-field{padding:6px 14px 8px}
+  .calc-field label{margin-bottom:0}
+  .calc-field input{font-size:24px}
+}
+.calc-field input{text-overflow:clip}
 </style>
 </head>
 <body>
@@ -972,38 +1018,20 @@ button,a,input,select,textarea,label{touch-action:manipulation}
       <circle cx="670" cy="190" r="4"/>
     </svg>
     <div class="wrap hero-anim" style="position:relative;padding:14px 18px 6px">
-      <div class="pagehead"><span class="pico" data-icon="plane"></span><div><h2>航班</h2><p class="sub" style="margin:0">吉隆坡 ⇄ 台北桃園，馬來西亞航空</p></div></div>
-      <div style="height:12px"></div>
-      <div class="tickets">
-        <div class="ticket">
-          <div class="main">
-            <div class="dir">去程 · 4月23日 週五</div>
-            <div class="legs"><span class="code">KUL</span><span class="arrow">→</span><span class="code">TPE</span></div>
-            <div class="legs"><span class="t">09:15</span><span class="arrow">→</span><span class="t">14:10</span></div>
-            <div class="note">吉隆坡 T1 → 桃園 T1，飛行約4小時55分</div>
-          </div>
-          <div class="stub"><b>MH366</b><small>馬航</small></div>
-        </div>
-        <div class="ticket">
-          <div class="main">
-            <div class="dir">回程 · 5月1日 週六</div>
-            <div class="legs"><span class="code">TPE</span><span class="arrow">→</span><span class="code">KUL</span></div>
-            <div class="legs"><span class="t">15:10</span><span class="arrow">→</span><span class="t">20:00</span></div>
-            <div class="note">最晚 12:00 到桃園 T1 辦理值機</div>
-          </div>
-          <div class="stub"><b>MH367</b><small>馬航</small></div>
-        </div>
-      </div>
+      <div class="pagehead"><span class="pico" data-icon="plane"></span><div><h2>機票</h2><p class="sub" style="margin:0" id="flSub">吉隆坡 ⇄ 台北桃園</p></div></div>
+      <div class="fltoolbar"><button type="button" class="itedit" id="flEditBtn">✎ 編輯航班</button></div>
+      <div class="tickets" id="tickets"></div>
+      <div class="ittools" id="flTools" hidden><button type="button" class="itadd" id="flAdd">＋ 新增航班</button><button type="button" class="itreset" id="flReset" hidden>恢復預設航班</button></div>
       <p style="margin-top:12px;font-size:13.5px">航班時間來自2026年的時刻表，2027年可能調整，出發前一個月請到航空公司確認。</p>
     </div>
   </div>
-</section>
-
-<section class="page" id="page-hotel" hidden>
-  <div class="wrap" style="padding-top:14px">
-    <div class="pagehead"><span class="pico" data-icon="house"></span><div><h2>住宿</h2><p class="sub" style="margin:0">8 晚、4 段住宿。飯店名稱和訂房代號訂好後填進來，會存在這台裝置的瀏覽器裡。</p></div></div>
+  <div class="wrap" id="hotelSec">
+    <div class="pagehead"><span class="pico" data-icon="house"></span><div><h2>住宿</h2><p class="sub" style="margin:0">想住哪、住幾晚都可以自己加。資料存在這台裝置的瀏覽器裡。</p></div></div>
+    <div class="fltoolbar"><button type="button" class="itedit" id="htEditBtn">✎ 編輯住宿</button></div>
     <div class="hotel-sum" id="hotelSum"></div>
     <div class="hotels" id="hotels"></div>
+    <div class="ittools" id="htTools" hidden><button type="button" class="itadd" id="htAdd">＋ 新增住宿</button><button type="button" class="itreset" id="htReset" hidden>恢復預設住宿</button></div>
+    <div style="height:18px"></div>
   </div>
 </section>
 
@@ -1115,11 +1143,60 @@ button,a,input,select,textarea,label{touch-action:manipulation}
 <nav class="bottomnav" aria-label="頁面選單">
   <button class="navbtn on" data-page="prep" type="button"><span class="ic"><svg class="nill" viewBox="0 0 32 32" aria-hidden="true" stroke="#3E3A39" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M2 29 Q7 22 12 26 Q15 23 18 26" fill="#B9DAA5"/><path d="M20 26 Q25 22 30 29" fill="#B9DAA5"/><rect x="13" y="21" width="6" height="8" rx="1" fill="#FFFFFF"/><path d="M13 21 L12 17 H20 L19 21 Z" fill="#FCF0CD"/><path d="M13 17 L12 13 H20 L19 17 Z" fill="#FCF0CD"/><path d="M13.5 13 L12.5 9 H19.5 L18.5 13 Z" fill="#F6D27A"/><rect x="14.5" y="6" width="3" height="3" rx=".8" fill="#FFFFFF"/><path d="M16 6 V2.5" fill="none"/><path d="M2 29 H30" fill="none"/></svg></span>首頁</button>
   <button class="navbtn" data-page="expense" type="button"><span class="ic"><svg class="nill" viewBox="0 0 32 32" aria-hidden="true" stroke="#3E3A39" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="21.5" cy="11.5" r="7" fill="#FCF0CD"/><circle cx="21.5" cy="11.5" r="3.6" fill="none" stroke-width="2"/><circle cx="12.5" cy="19" r="9" fill="#F6D27A"/><circle cx="12.5" cy="19" r="5" fill="none" stroke-width="2"/><path d="M12.5 16.5 V21.5 M10.5 18 H14.5" fill="none" stroke-width="2"/></svg></span>記帳</button>
-  <button class="navbtn" data-page="flights" type="button"><span class="ic"><svg class="nill" viewBox="0 0 32 32" aria-hidden="true" stroke="#3E3A39" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M5 19 L24 12 Q29 10.5 28 14.5 L9.5 22 Z" fill="#FFFFFF"/><path d="M15 15.5 L11 7 L15 6.5 L20.5 13.5 Z" fill="#A8D3E6"/><path d="M16.5 18.5 L18.5 25 L21.5 24.5 L20.5 17 Z" fill="#A8D3E6"/><path d="M7 20 L4.5 14.5 L7.5 14.5 L10 18 Z" fill="#F2A497"/><path d="M3 26 H5 M8 27 H10" fill="none" stroke-width="2"/></svg></span>機票</button>
-  <button class="navbtn" data-page="hotel" type="button"><span class="ic"><svg class="nill" viewBox="0 0 32 32" aria-hidden="true" stroke="#3E3A39" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M24 2.5 A4 4 0 1 0 29 7.5 A3.4 3.4 0 0 1 24 2.5 Z" fill="#F6D27A" stroke-width="2"/><rect x="7" y="15" width="18" height="13" rx="1.5" fill="#FCF0CD"/><path d="M4 16 L16 6 L28 16 Z" fill="#F2A497"/><rect x="13.5" y="20" width="5" height="8" rx="1.2" fill="#A8D3E6" stroke-width="2"/><path d="M3 28 H29" fill="none"/></svg></span>酒店</button>
+  <button class="navbtn" data-page="flights" type="button"><span class="ic"><svg class="nill" viewBox="0 0 32 32" aria-hidden="true" stroke="#3E3A39" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><rect x="4" y="19" width="13" height="10" rx="1.2" fill="#FCF0CD"/><path d="M2 20 L10.5 12.5 L19 20 Z" fill="#F2A497"/><rect x="8.5" y="23" width="4" height="6" rx="1" fill="#A8D3E6" stroke-width="2"/><path d="M13 9 L27 4.5 Q31 3.5 30.2 6.5 L17 11.5 Z" fill="#FFFFFF" stroke-width="2.2"/><path d="M21 7 L18.5 2 L21 1.8 L24.5 6 Z" fill="#A8D3E6" stroke-width="2"/><path d="M15 10 L13.3 6.8 L15.2 6.8 L16.8 9.3 Z" fill="#F2A497" stroke-width="1.8"/><path d="M21 15 Q24 17 27 15" fill="none" stroke-width="2" stroke-dasharray="1 3.5"/><path d="M2 29 H30" fill="none"/></svg></span>機酒</button>
   <button class="navbtn" data-page="itinerary" type="button"><span class="ic"><svg class="nill" viewBox="0 0 32 32" aria-hidden="true" stroke="#3E3A39" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M4 11 Q4 7.5 7.5 7.5 H20 Q28 7.5 28 16 V23 H4 Z" fill="#F2A497"/><rect x="7" y="11" width="4.5" height="4.5" rx="1" fill="#E3F1F7" stroke-width="2"/><rect x="13.5" y="11" width="4.5" height="4.5" rx="1" fill="#E3F1F7" stroke-width="2"/><path d="M20.5 11 H23.5 Q26 11.5 26.5 15.5 H20.5 Z" fill="#E3F1F7" stroke-width="2"/><path d="M4 19 H28" fill="none" stroke-width="2"/><circle cx="9.5" cy="25" r="2.3" fill="#FFFFFF" stroke-width="2"/><circle cx="22.5" cy="25" r="2.3" fill="#FFFFFF" stroke-width="2"/><path d="M2 28.5 H30" fill="none"/></svg></span>行程</button>
   <button class="navbtn" data-page="wish" type="button"><span class="ic"><svg class="nill" viewBox="0 0 32 32" aria-hidden="true" stroke="#3E3A39" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M8.5 5 H23.5 L20.5 22 H11.5 Z" fill="#F2A497"/><path d="M9.8 11 H22.2" fill="none" stroke-width="2"/><path d="M16 14 V19 M13.8 16 H18.2" fill="none" stroke-width="2"/><path d="M16 30 Q12.8 27.3 16 24.3 Q19.2 27.3 16 30 Z" fill="#F6D27A" stroke-width="2"/><path d="M4 6 L5 8 L7 8.6 L5 9.4 L4 11.5 L3 9.4 L1 8.6 L3 8 Z" fill="#F6D27A" stroke-width="1.6" class="nsparkle"/><circle cx="28" cy="15" r="1.6" fill="#F6D27A" stroke-width="1.6" class="nsparkle"/></svg></span>想去</button>
 </nav>
+
+<div class="itsheet" id="htSheet" hidden>
+  <div class="itsheet-bg" id="htSheetBg"></div>
+  <div class="itsheet-card" role="dialog" aria-modal="true" aria-labelledby="htSheetTitle">
+    <div class="itsheet-head"><h2 id="htSheetTitle">新增住宿</h2><span>住宿資料只存在這台裝置的瀏覽器裡</span></div>
+    <div class="itsheet-body">
+      <div class="itrow2"><label class="itl">城市 / 地區<input id="htCity" maxlength="20" placeholder="台北"></label>
+        <label class="itl">位置（選填）<input id="htArea" maxlength="60" placeholder="台北車站附近"></label></div>
+      <label class="itl">飯店名稱（選填）<input id="htName" maxlength="80" placeholder="訂好後再填也可以"></label>
+      <div class="itrow2"><label class="itl">入住日期<input id="htIn" type="date"></label>
+        <label class="itl">退房日期<input id="htOut" type="date"></label></div>
+      <div class="htnights" id="htNights"></div>
+      <label class="itl">訂房代號 / 平台（選填）<input id="htCode" maxlength="80" placeholder="Agoda #123456"></label>
+      <label class="itl">備註（選填）<textarea id="htNote" rows="3" maxlength="500" placeholder="入住時間、早餐、地址、怎麼過去…"></textarea></label>
+      <div class="exp-err" id="htErr"></div>
+    </div>
+    <div class="itsheet-foot">
+      <button type="button" class="itdel" id="htDelete" hidden>刪除這筆</button>
+      <span style="flex:1"></span>
+      <button type="button" class="exp-cancel" id="htCancel">取消</button>
+      <button type="button" class="exp-add" id="htSave">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div class="itsheet" id="flSheet" hidden>
+  <div class="itsheet-bg" id="flSheetBg"></div>
+  <div class="itsheet-card" role="dialog" aria-modal="true" aria-labelledby="flSheetTitle">
+    <div class="itsheet-head"><h2 id="flSheetTitle">新增航班</h2><span>航班資料只存在這台裝置的瀏覽器裡</span></div>
+    <div class="itsheet-body">
+      <div class="itl">類型<div class="itchips" id="flDir"><button type="button" data-v="去程">去程</button><button type="button" data-v="回程">回程</button><button type="button" data-v="轉機">轉機</button><button type="button" data-v="其他">其他</button></div></div>
+      <div class="itrow2"><label class="itl">日期<input id="flDate" type="date"></label>
+        <label class="itl">航班號碼<input id="flNo" maxlength="12" placeholder="MH366" autocapitalize="characters"></label></div>
+      <label class="itl">航空公司<input id="flAir" maxlength="30" placeholder="馬來西亞航空"></label>
+      <div class="itrow2"><label class="itl">出發機場<input id="flFrom" maxlength="20" placeholder="KUL" autocapitalize="characters"></label>
+        <label class="itl">抵達機場<input id="flTo" maxlength="20" placeholder="TPE" autocapitalize="characters"></label></div>
+      <div class="itrow2"><label class="itl">起飛時間<input id="flDep" type="time"></label>
+        <label class="itl">抵達時間<input id="flArr" type="time"></label></div>
+      <label class="itl">航廈 / 說明（選填）<input id="flInfo" maxlength="120" placeholder="吉隆坡 T1 → 桃園 T1，飛行約 4 小時 55 分"></label>
+      <label class="itl">備註（選填）<textarea id="flRemark" rows="3" maxlength="500" placeholder="座位、行李額度、餐點、值機提醒…"></textarea></label>
+      <div class="exp-err" id="flErr"></div>
+    </div>
+    <div class="itsheet-foot">
+      <button type="button" class="itdel" id="flDelete" hidden>刪除這班</button>
+      <span style="flex:1"></span>
+      <button type="button" class="exp-cancel" id="flCancel">取消</button>
+      <button type="button" class="exp-add" id="flSave">儲存</button>
+    </div>
+  </div>
+</div>
 
 <div class="itsheet" id="itSheet" hidden>
   <div class="itsheet-bg" id="itSheetBg"></div>
@@ -1789,43 +1866,264 @@ button,a,input,select,textarea,label{touch-action:manipulation}
     });
   })();
 
-  // Hotel info: 4 stays built from the itinerary; name / booking code / note are editable per viewer
-  var HOTELS = [
-    {id:"h1", city:"台北", icon:"tower", inD:"4/23（五）", outD:"4/24（六）", n:1, area:"台北車站附近", q:"台北車站", why:"第一晚。隔天一早搭高鐵去台中，住車站附近最方便。"},
-    {id:"h2", city:"台中", icon:"sunset", inD:"4/24（六）", outD:"4/26（一）", n:2, area:"台中車站附近（連住2晚）", q:"台中車站", why:"步行約 6 分鐘到日月潭巴士站，晚上逛宮原眼科、一中街也近。"},
-    {id:"h3", city:"花蓮", icon:"wave", inD:"4/26（一）", outD:"4/28（三）", n:2, area:"花蓮火車站附近（連住2晚）", q:"花蓮火車站", why:"太魯閣包車接送、晚上去東大門夜市都方便，有免費單車更好。"},
-    {id:"h4", city:"台北", icon:"tower", inD:"4/28（三）", outD:"5/1（六）", n:3, area:"台北車站附近（連住3晚）", q:"台北車站", why:"連住 3 晚不用換飯店。5/1 退房後可寄放行李，搭機場捷運到桃園 T1 約 35–40 分鐘。"}
-  ];
+  // ---- Hotels: a free list (any place, any dates), per-viewer, saved in the browser ----
   (function(){
     var box = document.getElementById("hotels"); if(!box) return;
-    var HK = "tw2027-hotels", saved = {};
-    try { saved = JSON.parse(localStorage.getItem(HK) || "{}") || {}; } catch(e){ saved = {}; }
-    function store(){ try { localStorage.setItem(HK, JSON.stringify(saved)); } catch(e){} }
-    var total = HOTELS.reduce(function(a,h){ return a + h.n; }, 0);
-    document.getElementById("hotelSum").innerHTML = '<span>共 '+total+' 晚</span>' + HOTELS.map(function(h){ return '<span>'+esc(h.city)+' '+h.n+' 晚</span>'; }).join("");
-    HOTELS.forEach(function(h){
-      var v = saved[h.id] || {};
-      var card = document.createElement("article"); card.className = "hotel";
-      card.innerHTML =
-        '<div class="hotel-top"><span class="pico" data-icon="'+h.icon+'"></span><div><div class="hotel-city">'+esc(h.city)+'</div>' +
-        '<div class="hotel-dates">'+esc(h.inD)+' → '+esc(h.outD)+'</div></div><span class="hotel-n">'+h.n+' 晚</span></div>' +
-        '<div class="hotel-body"><div>📍 '+esc(h.area)+'</div><p class="why">'+esc(h.why)+'</p>' +
-        '<input data-f="name" placeholder="飯店名稱（訂好後填）" aria-label="'+esc(h.city)+'飯店名稱" maxlength="80">' +
-        '<input data-f="code" placeholder="訂房代號 / 平台（選填）" aria-label="'+esc(h.city)+'訂房代號" maxlength="80">' +
-        '<input data-f="note" placeholder="備註：入住時間、早餐、地址…" aria-label="'+esc(h.city)+'住宿備註" maxlength="200">' +
-        '<div class="row"><a class="map" target="_blank" rel="noopener">地圖</a><span class="hotel-saved"></span></div></div>';
-      var map = card.querySelector(".map"), msg = card.querySelector(".hotel-saved"), t = null;
-      function refreshMap(){ var n = (saved[h.id] && saved[h.id].name) || ""; map.href = mapUrl(n ? n + " " + h.city : h.q); map.textContent = n ? "地圖：" + n : "地圖：" + h.area.replace(/（.*）/, ""); }
-      Array.prototype.forEach.call(card.querySelectorAll("input"), function(inp){
-        var f = inp.getAttribute("data-f"); inp.value = v[f] || "";
-        inp.addEventListener("input", function(){
-          saved[h.id] = saved[h.id] || {}; saved[h.id][f] = inp.value.trim(); store(); refreshMap();
-          msg.textContent = "已儲存"; clearTimeout(t); t = setTimeout(function(){ msg.textContent = ""; }, 1500);
-        });
+    var $ = function(id){ return document.getElementById(id); };
+    var HT_KEY = "tw2027-hotels-v2";
+    var HT_DEFAULT = [
+      {id:"h1", city:"台北", area:"台北車站附近", inD:"2027-04-23", outD:"2027-04-24", name:"", code:"", note:"第一晚。隔天一早搭高鐵去台中，住車站附近最方便。"},
+      {id:"h2", city:"台中", area:"台中車站附近", inD:"2027-04-24", outD:"2027-04-26", name:"", code:"", note:"步行約 6 分鐘到日月潭巴士站，晚上逛宮原眼科、一中街也近。"},
+      {id:"h3", city:"花蓮", area:"花蓮火車站附近", inD:"2027-04-26", outD:"2027-04-28", name:"", code:"", note:"太魯閣包車接送、晚上去東大門夜市都方便，有免費單車更好。"},
+      {id:"h4", city:"台北", area:"台北車站附近", inD:"2027-04-28", outD:"2027-05-01", name:"", code:"", note:"連住 3 晚不用換飯店。5/1 退房後可寄放行李，搭機場捷運到桃園 T1 約 35–40 分鐘。"}
+    ];
+    var hotels = null, custom = false;
+    try { var raw = JSON.parse(localStorage.getItem(HT_KEY) || "null"); if(Array.isArray(raw)){ hotels = raw; custom = true; } } catch(e){}
+    if(!hotels){
+      hotels = JSON.parse(JSON.stringify(HT_DEFAULT));
+      // carry over names / codes / notes typed into the old fixed hotel cards
+      try {
+        var old = JSON.parse(localStorage.getItem("tw2027-hotels") || "{}") || {};
+        hotels.forEach(function(h){ var o = old[h.id]; if(!o) return;
+          if(o.name) h.name = o.name; if(o.code) h.code = o.code; if(o.note) h.note = o.note + (h.note ? "\n" + h.note : ""); custom = custom || !!(o.name||o.code||o.note); });
+      } catch(e){}
+    }
+    function save(){ custom = true; try { localStorage.setItem(HT_KEY, JSON.stringify(hotels)); } catch(e){} }
+    function sortH(){ hotels.sort(function(a,b){ var x=a.inD||"9999", y=b.inD||"9999"; return x<y?-1:x>y?1:0; }); }
+    var WK = ["日","一","二","三","四","五","六"];
+    function parse(iso){ var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso||""); return m ? Date.UTC(+m[1], +m[2]-1, +m[3]) : null; }
+    function dl(iso){ var t = parse(iso); if(t === null) return ""; var d = new Date(t); return (d.getUTCMonth()+1) + "/" + d.getUTCDate() + "（" + WK[d.getUTCDay()] + "）"; }
+    function nights(h){ var a = parse(h.inD), b = parse(h.outD); return (a !== null && b !== null && b > a) ? Math.round((b-a)/86400000) : 0; }
+    function iconFor(h){
+      var t = (h.city||"") + (h.area||"") + (h.name||"");
+      if(/花蓮|七星潭|海/.test(t)) return "wave"; if(/太魯閣|天祥/.test(t)) return "gorge"; if(/日月潭|伊達邵|水社|湖/.test(t)) return "boat";
+      if(/九份|十分|平溪|瑞芳/.test(t)) return "lantern"; if(/台中|高美|彩虹/.test(t)) return "sunset"; if(/台北|101|北投|西門|信義/.test(t)) return "tower";
+      return "house";
+    }
+    var editing = false, cur = null, lastFocus = null;
+    function render(){
+      sortH(); box.innerHTML = "";
+      var total = 0, byCity = {};
+      hotels.forEach(function(h){ var n = nights(h); total += n; var c = h.city || "其他"; byCity[c] = (byCity[c]||0) + n; });
+      $("hotelSum").innerHTML = hotels.length ? '<span>共 '+total+' 晚 · '+hotels.length+' 間</span>' + Object.keys(byCity).map(function(c){ return '<span>'+esc(c)+' '+byCity[c]+' 晚</span>'; }).join("") : "";
+      if(!hotels.length) box.innerHTML = '<div class="box exp-empty">還沒有住宿，按「✎ 編輯住宿」再「＋ 新增住宿」加入。</div>';
+      hotels.forEach(function(h, i){
+        var n = nights(h), card = document.createElement("article");
+        card.className = "hotel" + (editing ? " editable" : "");
+        var dates = (h.inD || h.outD) ? esc(dl(h.inD) || "?") + ' → ' + esc(dl(h.outD) || "?") : "日期未定";
+        var q = h.name ? h.name + " " + (h.city||"") : (h.area || h.city || "");
+        card.innerHTML =
+          '<div class="hotel-top"><span class="pico" data-icon="'+iconFor(h)+'"></span><div><div class="hotel-city">'+esc(h.city || "住宿")+'</div>' +
+          '<div class="hotel-dates">'+dates+'</div></div><span class="hotel-n">'+(n ? n + ' 晚' : '— 晚')+'</span></div>' +
+          '<div class="hotel-body">' +
+            '<div class="hotel-name'+(h.name ? '' : ' empty')+'">🏨 '+esc(h.name || "飯店未填")+'</div>' +
+            (h.area ? '<div>📍 '+esc(h.area)+'</div>' : '') +
+            (h.code ? '<div>🎫 '+esc(h.code)+'</div>' : '') +
+            (h.note ? '<p class="why">'+esc(h.note).replace(/\n/g,'<br>')+'</p>' : '') +
+            (q ? '<div class="row"><a class="map" target="_blank" rel="noopener" href="'+mapUrl(q)+'">地圖：'+esc(h.name || h.area || h.city)+'</a></div>' : '') +
+          '</div>' +
+          (editing ? '<div class="tctl"><button type="button" data-act="edit" data-i="'+i+'">✎ 修改</button><button type="button" class="del" data-act="del" data-i="'+i+'">刪除</button></div>' : '');
+        if(editing){ card.setAttribute("data-act","edit"); card.setAttribute("data-i", i); }
+        box.appendChild(card);
       });
-      refreshMap();
-      box.appendChild(card);
+      fillIcons(box);
+      $("htTools").hidden = !editing; $("htReset").hidden = !custom;
+      $("htEditBtn").textContent = editing ? "✓ 完成編輯" : "✎ 編輯住宿"; $("htEditBtn").classList.toggle("on", editing);
+    }
+    function nightsHint(){
+      var n = nights({inD:$("htIn").value, outD:$("htOut").value});
+      $("htNights").textContent = n ? "共 " + n + " 晚" : ($("htIn").value && $("htOut").value ? "退房要晚於入住" : "");
+    }
+    $("htIn").addEventListener("change", function(){
+      // default check-out to the next day so one-night stays are a single tap
+      if(this.value && (!$("htOut").value || $("htOut").value <= this.value)){
+        var t = parse(this.value) + 86400000, d = new Date(t);
+        $("htOut").value = d.getUTCFullYear() + "-" + ("0"+(d.getUTCMonth()+1)).slice(-2) + "-" + ("0"+d.getUTCDate()).slice(-2);
+      }
+      nightsHint();
     });
+    $("htOut").addEventListener("change", nightsHint);
+    function open(i){
+      cur = i; var h = i >= 0 ? hotels[i] : {};
+      $("htSheetTitle").textContent = i >= 0 ? "修改住宿" : "新增住宿";
+      ["city","area","name","code","note"].forEach(function(f){ $("ht" + f[0].toUpperCase() + f.slice(1)).value = h[f] || ""; });
+      $("htIn").value = h.inD || ""; $("htOut").value = h.outD || ""; nightsHint();
+      $("htErr").textContent = "";
+      $("htDelete").hidden = i < 0; $("htDelete").textContent = "刪除這筆"; $("htDelete").classList.remove("armed");
+      lastFocus = document.activeElement;
+      $("htSheet").hidden = false; document.body.classList.add("sheet-open");
+      setTimeout(function(){ (i >= 0 ? $("htName") : $("htCity")).focus(); }, 30);
+    }
+    function close(){
+      $("htSheet").hidden = true; document.body.classList.remove("sheet-open"); cur = null;
+      if(lastFocus && lastFocus.isConnected) try { lastFocus.focus(); } catch(e){}
+    }
+    $("htSave").addEventListener("click", function(){
+      var h = {id: cur >= 0 ? hotels[cur].id : "u" + Date.now(),
+               city:$("htCity").value.trim(), area:$("htArea").value.trim(), name:$("htName").value.trim(),
+               inD:$("htIn").value, outD:$("htOut").value, code:$("htCode").value.trim(), note:$("htNote").value.trim()};
+      if(!h.city && !h.name && !h.area){ $("htErr").textContent = "請至少填城市、地點或飯店名稱"; $("htCity").focus(); return; }
+      if(h.inD && h.outD && h.outD <= h.inD){ $("htErr").textContent = "退房日期要晚於入住日期"; $("htOut").focus(); return; }
+      if(cur >= 0) hotels[cur] = h; else hotels.push(h);
+      save(); close(); render();
+    });
+    $("htCancel").addEventListener("click", close);
+    $("htSheetBg").addEventListener("click", close);
+    document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !$("htSheet").hidden) close(); });
+    $("htDelete").addEventListener("click", function(){
+      var b = $("htDelete");
+      if(!b.classList.contains("armed")){ b.classList.add("armed"); b.textContent = "再按一次確認刪除"; return; }
+      hotels.splice(cur, 1); save(); close(); render();
+    });
+    $("htEditBtn").addEventListener("click", function(){ editing = !editing; render(); });
+    $("htAdd").addEventListener("click", function(){ open(-1); });
+    $("htReset").addEventListener("click", function(){
+      var b = $("htReset");
+      if(!b.classList.contains("armed")){
+        b.classList.add("armed"); b.textContent = "再按一次：自己加的住宿會清掉";
+        setTimeout(function(){ b.classList.remove("armed"); b.textContent = "恢復預設住宿"; }, 3000);
+        return;
+      }
+      b.classList.remove("armed"); b.textContent = "恢復預設住宿";
+      hotels = JSON.parse(JSON.stringify(HT_DEFAULT)); custom = false;
+      try { localStorage.removeItem(HT_KEY); localStorage.removeItem("tw2027-hotels"); } catch(e){}
+      render();
+    });
+    box.addEventListener("click", function(ev){
+      if(ev.target.closest("a")) return;
+      var el = ev.target.closest("[data-act]"); if(!el || !box.contains(el)) return;
+      var i = +el.getAttribute("data-i");
+      if(el.getAttribute("data-act") === "del"){
+        ev.stopPropagation();
+        if(!el.classList.contains("armed")){
+          el.classList.add("armed"); el.textContent = "確認刪除?";
+          setTimeout(function(){ if(el.isConnected){ el.classList.remove("armed"); el.textContent = "刪除"; } }, 2500);
+          return;
+        }
+        hotels.splice(i, 1); save(); render(); return;
+      }
+      ev.stopPropagation(); open(i);
+    });
+    render();
+  })();
+
+  // ---- Editable flights (per-viewer, saved in the browser) ----
+  (function(){
+    var box = document.getElementById("tickets"); if(!box) return;
+    var $ = function(id){ return document.getElementById(id); };
+    var FL_KEY = "tw2027-flights-v1";
+    var FL_DEFAULT = [
+      {id:"f1", dir:"去程", date:"2027-04-23", no:"MH366", air:"馬航", from:"KUL", to:"TPE", dep:"09:15", arr:"14:10", info:"吉隆坡 T1 → 桃園 T1，飛行約4小時55分", remark:""},
+      {id:"f2", dir:"回程", date:"2027-05-01", no:"MH367", air:"馬航", from:"TPE", to:"KUL", dep:"15:10", arr:"20:00", info:"最晚 12:00 到桃園 T1 辦理值機", remark:""}
+    ];
+    var flights = null, custom = false;
+    try { var raw = JSON.parse(localStorage.getItem(FL_KEY) || "null"); if(Array.isArray(raw)){ flights = raw; custom = true; } } catch(e){}
+    if(!flights) flights = JSON.parse(JSON.stringify(FL_DEFAULT));
+    function save(){ custom = true; try { localStorage.setItem(FL_KEY, JSON.stringify(flights)); } catch(e){} }
+    function sortF(){ flights.sort(function(a,b){ var x=(a.date||"9999")+(a.dep||""), y=(b.date||"9999")+(b.dep||""); return x<y?-1:x>y?1:0; }); }
+    var WK = ["週日","週一","週二","週三","週四","週五","週六"];
+    function dateLabel(iso){
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso||""); if(!m) return "";
+      var d = new Date(Date.UTC(+m[1], +m[2]-1, +m[3]));
+      return (+m[2]) + "月" + (+m[3]) + "日 " + WK[d.getUTCDay()];
+    }
+    var DIRCLS = {"去程":"go","回程":"back","轉機":"conn","其他":"other"};
+    var editing = false, cur = null, dir = "去程", lastFocus = null;
+
+    function render(){
+      sortF();
+      box.innerHTML = "";
+      if(!flights.length){ box.innerHTML = '<div class="box exp-empty">還沒有航班，按「✎ 編輯航班」再「＋ 新增航班」加入。</div>'; }
+      flights.forEach(function(f, i){
+        var t = document.createElement("div");
+        t.className = "ticket " + (DIRCLS[f.dir]||"other") + (editing ? " editable" : "");
+        var dl = dateLabel(f.date);
+        t.innerHTML =
+          '<div class="main">' +
+            '<div class="dir">' + esc(f.dir||"航班") + (dl ? ' · ' + esc(dl) : '') + '</div>' +
+            '<div class="legs"><span class="code">' + esc(f.from||"—") + '</span><span class="arrow">→</span><span class="code">' + esc(f.to||"—") + '</span></div>' +
+            ((f.dep||f.arr) ? '<div class="legs"><span class="t">' + esc(f.dep||"--:--") + '</span><span class="arrow">→</span><span class="t">' + esc(f.arr||"--:--") + '</span></div>' : '') +
+            (f.info ? '<div class="note">' + esc(f.info) + '</div>' : '') +
+          '</div>' +
+          '<div class="stub"><b>' + esc(f.no||"—") + '</b>' + (f.air ? '<small>' + esc(f.air) + '</small>' : '') + '</div>' +
+          (f.remark ? '<div class="tremark"><b>📝 備註</b>' + esc(f.remark).replace(/\n/g,'<br>') + '</div>' : '') +
+          (editing ? '<div class="tctl"><button type="button" data-act="edit" data-i="'+i+'">✎ 修改 / 加備註</button><button type="button" class="del" data-act="del" data-i="'+i+'">刪除</button></div>' : '');
+        if(editing) t.setAttribute("data-act","edit"), t.setAttribute("data-i", i);
+        box.appendChild(t);
+      });
+      $("flTools").hidden = !editing;
+      $("flReset").hidden = !custom;
+      $("flEditBtn").textContent = editing ? "✓ 完成編輯" : "✎ 編輯航班";
+      $("flEditBtn").classList.toggle("on", editing);
+      var routes = []; flights.forEach(function(f){ if(f.from && f.to){ var r = f.from + " → " + f.to; if(routes.indexOf(r) < 0) routes.push(r); } });
+      $("flSub").textContent = routes.length ? routes.join("、") : "航班資訊";
+    }
+
+    function chipSet(v){ Array.prototype.forEach.call($("flDir").children, function(b){ b.classList.toggle("on", b.getAttribute("data-v") === v); }); }
+    Array.prototype.forEach.call($("flDir").children, function(b){ b.addEventListener("click", function(){ dir = b.getAttribute("data-v"); chipSet(dir); }); });
+    function open(i){
+      cur = i;
+      var f = i >= 0 ? flights[i] : {dir: flights.length ? "其他" : "去程"};
+      $("flSheetTitle").textContent = i >= 0 ? "修改航班" : "新增航班";
+      dir = f.dir || "其他"; chipSet(dir);
+      $("flDate").value = f.date||""; $("flNo").value = f.no||""; $("flAir").value = f.air||"";
+      $("flFrom").value = f.from||""; $("flTo").value = f.to||""; $("flDep").value = f.dep||""; $("flArr").value = f.arr||"";
+      $("flInfo").value = f.info||""; $("flRemark").value = f.remark||""; $("flErr").textContent = "";
+      $("flDelete").hidden = i < 0; $("flDelete").textContent = "刪除這班"; $("flDelete").classList.remove("armed");
+      lastFocus = document.activeElement;
+      $("flSheet").hidden = false; document.body.classList.add("sheet-open");
+      setTimeout(function(){ (i >= 0 ? $("flRemark") : $("flNo")).focus(); }, 30);
+    }
+    function close(){
+      $("flSheet").hidden = true; document.body.classList.remove("sheet-open"); cur = null;
+      if(lastFocus && lastFocus.isConnected) try { lastFocus.focus(); } catch(e){}
+    }
+    $("flSave").addEventListener("click", function(){
+      var no = $("flNo").value.trim().toUpperCase(), from = $("flFrom").value.trim().toUpperCase(), to = $("flTo").value.trim().toUpperCase();
+      if(!no && !(from && to)){ $("flErr").textContent = "請至少填航班號碼，或出發和抵達機場"; $("flNo").focus(); return; }
+      var old = cur >= 0 ? flights[cur] : {id: "u" + Date.now()};
+      var f = {id: old.id, dir: dir, date: $("flDate").value, no: no, air: $("flAir").value.trim(), from: from, to: to,
+               dep: $("flDep").value, arr: $("flArr").value, info: $("flInfo").value.trim(), remark: $("flRemark").value.trim()};
+      if(cur >= 0) flights[cur] = f; else flights.push(f);
+      save(); close(); render();
+    });
+    $("flCancel").addEventListener("click", close);
+    $("flSheetBg").addEventListener("click", close);
+    document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !$("flSheet").hidden) close(); });
+    $("flDelete").addEventListener("click", function(){
+      var b = $("flDelete");
+      if(!b.classList.contains("armed")){ b.classList.add("armed"); b.textContent = "再按一次確認刪除"; return; }
+      flights.splice(cur, 1); save(); close(); render();
+    });
+    $("flEditBtn").addEventListener("click", function(){ editing = !editing; render(); });
+    $("flAdd").addEventListener("click", function(){ open(-1); });
+    $("flReset").addEventListener("click", function(){
+      var b = $("flReset");
+      if(!b.classList.contains("armed")){
+        b.classList.add("armed"); b.textContent = "再按一次：自己改的航班和備註會清掉";
+        setTimeout(function(){ b.classList.remove("armed"); b.textContent = "恢復預設航班"; }, 3000);
+        return;
+      }
+      b.classList.remove("armed"); b.textContent = "恢復預設航班";
+      flights = JSON.parse(JSON.stringify(FL_DEFAULT)); custom = false;
+      try { localStorage.removeItem(FL_KEY); } catch(e){}
+      render();
+    });
+    box.addEventListener("click", function(ev){
+      var el = ev.target.closest("[data-act]"); if(!el || !box.contains(el)) return;
+      var i = +el.getAttribute("data-i");
+      if(el.getAttribute("data-act") === "del"){
+        ev.stopPropagation();
+        if(!el.classList.contains("armed")){
+          el.classList.add("armed"); el.textContent = "確認刪除?";
+          setTimeout(function(){ if(el.isConnected){ el.classList.remove("armed"); el.textContent = "刪除"; } }, 2500);
+          return;
+        }
+        flights.splice(i, 1); save(); render(); return;
+      }
+      ev.stopPropagation(); open(i);
+    });
+    render();
   })();
 
   // Countdown to departure (MH366, 09:15 Kuala Lumpur = 01:15 UTC); shows the trip day once travelling
@@ -2484,7 +2782,7 @@ button,a,input,select,textarea,label{touch-action:manipulation}
 
   // Bottom tab bar: swap which page is visible, no more scrolling through one long page
   var navBtns = Array.prototype.slice.call(document.querySelectorAll(".navbtn"));
-  var PAGES = ["itinerary","flights","hotel","prep","expense","wish"];
+  var PAGES = ["itinerary","flights","prep","expense","wish"];
   function showPage(id){
     PAGES.forEach(function(p){ var el = document.getElementById("page-"+p); if(el) el.hidden = (p !== id); });
     navBtns.forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-page") === id); });
