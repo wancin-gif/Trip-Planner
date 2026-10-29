@@ -863,6 +863,54 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
   .calc-field input{font-size:24px}
 }
 .calc-field input{text-overflow:clip}
+
+/* Editable souvenirs + tips inside a day */
+.rowdel{border:2px solid var(--ink);background:var(--surface);color:var(--muted);font:inherit;font-size:13px;line-height:1;min-width:30px;min-height:30px;padding:0 8px;border-radius:99px;cursor:pointer;vertical-align:middle;margin-right:6px}
+.tips li .rowdel{margin:0 0 0 4px}
+.rowdel.armed,.rowdel:hover{background:var(--coral-t);color:var(--chili)}
+.rowadd{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px;margin-top:10px;padding-top:10px;border-top:2px dashed var(--ink)}
+.rowadd.one{grid-template-columns:minmax(0,1fr) auto}
+.rowadd input{width:100%;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:2.5px dashed var(--ink);border-radius:14px;padding:7px 10px;min-height:42px}
+.rowadd input:focus{outline:none;border-style:solid;box-shadow:0 0 0 3px var(--yellow)}
+.rowadd button{border:2.5px solid var(--ink);background:var(--coral);color:var(--ink);font:inherit;font-size:14px;padding:0 14px;border-radius:14px;cursor:pointer;box-shadow:0 2px 0 var(--ink);min-height:42px}
+@media(max-width:480px){.rowadd{grid-template-columns:minmax(0,1fr) auto}.rowadd input[data-f=bn]{grid-column:1 / -1}}
+@media (pointer:coarse){.rowdel{min-width:36px;min-height:36px}}
+
+.meta .linkchip{margin-left:0;background:var(--yellow);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta .linkchip + .map{margin-left:auto}
+
+/* Move a day's plan to another date */
+.itmove{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0 4px;padding:12px;background:var(--mizu-t);border:2.5px dashed var(--ink);border-radius:18px}
+.itmove-lb{flex:1 0 100%;font-size:13.5px}
+.itmove button{border:2px solid var(--ink);background:var(--surface);color:var(--ink);font:inherit;font-size:13.5px;padding:2px 12px;border-radius:99px;cursor:pointer;min-height:38px}
+.itmove button[disabled]{opacity:.4;cursor:default}
+.itmove .itreset{border:0;background:none;min-height:0;padding:4px}
+.itswap{display:flex;align-items:center;gap:8px;font-size:13.5px;flex:1 0 100%;min-width:0;white-space:nowrap}
+.itswap select{flex:1 1 auto;min-width:0;max-width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:6px 10px;min-height:40px;-webkit-appearance:none;appearance:none}
+
+/* Reorder items within a day */
+.itorder{margin-left:auto;display:inline-flex;gap:6px}
+.itctl .itorder .ord{min-width:42px;padding:2px 0;background:var(--yellow-t)}
+.itctl .ord[disabled]{opacity:.35;cursor:default}
+.card.justmoved{animation:movedFlash .9s ease}
+@keyframes movedFlash{0%{box-shadow:0 0 0 7px var(--yellow)}100%{box-shadow:0 0 0 0 rgba(246,210,122,0)}}
+@media(prefers-reduced-motion:reduce){.card.justmoved{animation:none}}
+
+/* Kind colours (user-selectable) + per-item colour */
+:root{--k-sight:#B9DAA5;--k-food:#F2A497;--k-transit:#A8D3E6}
+.card.transit,.mstop.transit{--kc:var(--k-transit)} .card.sight,.mstop.sight{--kc:var(--k-sight)} .card.food,.mstop.food{--kc:var(--k-food)}
+.card .tag{background:var(--kc);color:var(--ink)}
+.card{background:color-mix(in srgb, var(--kc) 16%, var(--surface))}
+.card.must{background:color-mix(in srgb, var(--kc) 30%, var(--surface))}
+.card.editable:hover{background:color-mix(in srgb, var(--kc) 34%, var(--surface))}
+.tagdemo{display:inline-block;font-size:12.5px;border:2px solid var(--ink);border-radius:99px;padding:0 10px;line-height:1.5}
+.tagdemo.sight{background:var(--k-sight)} .tagdemo.food{background:var(--k-food)} .tagdemo.transit{background:var(--k-transit)}
+.itcolors button{display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 5px}
+.itcolors button i{width:18px;height:18px;border-radius:50%;background:var(--sw);border:2px solid var(--ink);flex:0 0 auto}
+.itcolors button.auto{padding:3px 12px}
+.itcolors button.on{background:var(--sw, var(--yellow));outline:3px solid var(--ink);outline-offset:1px}
+.itcolors button.auto.on{background:var(--yellow)}
+.itselect{width:100%;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:2.5px solid var(--ink);border-radius:14px;padding:8px 10px;min-height:44px;-webkit-appearance:none;appearance:none}
 </style>
 </head>
 <body>
@@ -953,7 +1001,7 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       <div class="hero-txt">
         <p class="hero-kicker">2027.4.23（五）– 5.1（六）· 吉隆坡出發</p>
         <h2 class="hero-title">台灣 9天8夜</h2>
-        <p class="hero-route"><span>台北</span><span>台中</span><span>日月潭</span><span>花蓮</span><span>太魯閣</span><span>九份</span></p>
+        <p class="hero-route"><span>台北</span><span>花蓮</span><span>賞鯨</span><span>九份</span><span>十分</span><span>淡水</span></p>
         <div class="count" id="countdown" aria-live="polite">
           <div><b id="cdD">--</b><span>天</span></div>
           <div><b id="cdH">--</b><span>小時</span></div>
@@ -1001,7 +1049,7 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       <p class="sub">勾選狀態會儲存在你這台裝置的瀏覽器裡。每一項下面的藍色按鈕是辦理的官方網站或查詢頁面。可以自己加入或刪除項目。</p>
       <ul class="check" id="checklist"></ul>
       <div class="ladd">
-        <input id="todoNew" placeholder="新增待辦，例如：訂太魯閣接駁" aria-label="新增項目" maxlength="80">
+        <input id="todoNew" placeholder="新增待辦，例如：訂賞鯨接送" aria-label="新增項目" maxlength="80">
         <button type="button" id="todoAdd">加入</button>
       </div>
       <div class="ltools"><button type="button" id="todoReset">恢復預設清單</button></div>
@@ -1086,7 +1134,7 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       <label class="exp-rate">當天匯率　1 TWD =<input id="expRate" type="text" inputmode="decimal" aria-label="匯率">MYR <button type="button" class="rate-refresh" id="expRateLive">↻ 用即時匯率</button></label>
       <div class="exp-catpick" id="expCatPick" role="group" aria-label="分類"></div>
       <div class="row2">
-        <input id="expNote" placeholder="備註（例：士林夜市）" aria-label="備註">
+        <input id="expNote" placeholder="備註（例：寧夏夜市）" aria-label="備註">
         <input id="expDate" type="date" aria-label="日期">
       </div>
       <div class="exp-who" id="expWho">
@@ -1203,12 +1251,15 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
   <div class="itsheet-card" role="dialog" aria-modal="true" aria-labelledby="itSheetTitle">
     <div class="itsheet-head"><h2 id="itSheetTitle">新增行程</h2><span id="itSheetDay"></span></div>
     <div class="itsheet-body">
+      <label class="itl">日期（改了會移到那一天）<select id="itDay" class="itselect"></select></label>
       <div class="itrow"><label class="itl">時間<input id="itT" type="time"></label>
         <div class="itl">類型<div class="itchips" id="itK"><button type="button" data-v="sight">景點</button><button type="button" data-v="food">美食</button><button type="button" data-v="transit">交通</button></div></div></div>
       <label class="itl">名稱<input id="itN" maxlength="60" placeholder="例如：西門町"></label>
       <label class="itl">說明<textarea id="itD" rows="3" maxlength="400" placeholder="要做什麼、吃什麼、注意事項…"></textarea></label>
       <div class="itrow2"><label class="itl">營業時間（選填）<input id="itH" maxlength="60" placeholder="約 11:00–22:00"></label>
         <label class="itl">地圖搜尋（選填）<input id="itQ" maxlength="80" placeholder="預設用名稱搜尋"></label></div>
+      <label class="itl">相關連結（選填）<input id="itU" type="url" inputmode="url" maxlength="500" placeholder="跟團預訂頁、官網或票券網址" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
+      <div class="itl">卡片顏色<div class="itchips itcolors" id="itC"></div></div>
       <label class="itcheck"><input type="checkbox" id="itMust"> ★ 標為「必去」</label>
       <div class="itl">怎麼從上一站過去（選填）
         <div class="itchips" id="itGoK"><button type="button" data-v="">不顯示</button><button type="button" data-v="pub">公共交通</button><button type="button" data-v="walk">步行</button><button type="button" data-v="taxi">打車 / 包車</button></div></div>
@@ -1330,7 +1381,14 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       '<path d="M8 38 H58" fill="none" stroke-width="2.5"/>' +
       '<circle cx="18" cy="48" r="4" fill="#FFFFFF" stroke-width="2.5"/><circle cx="46" cy="48" r="4" fill="#FFFFFF" stroke-width="2.5"/>', "火車")
   };
-  var DAYICON = {d1:"plane", d2:"sunset", d3:"boat", d4:"wave", d5:"gorge", d6:"tower", d7:"tower", d8:"lantern", d9:"plane"};
+  ICONS.whale = svg64(
+      '<path d="M4 54 Q12 50 20 54 T36 54 T52 54 T62 54" fill="none" stroke-width="2.5"/>' +
+      '<path d="M7 36 Q7 24 25 24 Q41 24 47 32 L56 25 Q60 31 56 37 L61 43 Q54 44 49 40 Q41 50 25 50 Q7 50 7 36 Z" fill="#A8D3E6"/>' +
+      '<path d="M12 41 Q24 47 40 42" fill="none" stroke-width="2.5"/>' +
+      '<circle cx="17" cy="33" r="1.8" fill="#3E3A39" stroke="none"/>' +
+      '<path d="M24 22 V15 M24 15 Q20 9 15 9 M24 15 Q28 9 33 9" fill="none" stroke-width="2.5"/>' +
+      '<circle cx="12" cy="13" r="2" fill="#FFFFFF" stroke-width="2"/><circle cx="36" cy="13" r="2" fill="#FFFFFF" stroke-width="2"/>', "賞鯨");
+  var DAYICON = {d1:"plane", d2:"wave", d3:"whale", d4:"train", d5:"tower", d6:"sunset", d7:"lantern", d8:"house", d9:"plane"};
   function fillIcons(root){
     Array.prototype.forEach.call((root||document).querySelectorAll(".pico[data-icon]"), function(el){
       var k = el.getAttribute("data-icon"); if(ICONS[k] && !el.firstChild) el.innerHTML = ICONS[k];
@@ -1343,141 +1401,117 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       items:[
         {t:"09:15", k:"transit", n:"MH366 吉隆坡 → 桃園", d:"約 14:10 抵達桃園 T1（以出發前時刻為準）。"},
         {t:"16:00", k:"transit", n:"機場捷運 → 台北車站", d:"直達車到 A1 台北站，約35–40分鐘，約 NT$160。", q:"台北車站"},
-        {t:"17:30", k:"transit", n:"酒店放行李", d:"住台北車站附近，隔天搭高鐵最方便。", q:"台北車站"},
-        {t:"18:30", k:"sight", n:"西門町", d:"逛街、豆花、阿宗面線、雞排。", h:"店家約 11:00–22:00", q:"西門町 台北",
-          go:{k:"pub", m:"捷運", d:"台北車站 → 西門站（板南線，1站）", t:"約 5 分", c:"約 NT$20", alt:"步行約 15 分"}},
-        {t:"20:00", k:"food", n:"寧夏夜市", d:"蚵仔煎、滷肉飯、雞肉飯、豆花、芋泥球。點滷味和湯品先問有沒有牛肉。", h:"約 17:00–24:00", q:"寧夏夜市 台北",
-          go:{k:"pub", m:"捷運", d:"西門站 → 台北車站（板南線）→ 換淡水信義線到雙連站，出站步行約 5 分", t:"約 20 分", c:"約 NT$20", alt:"打車約 10 分，約 NT$120–150"}}
+        {t:"17:30", k:"transit", n:"酒店放行李", d:"住台北車站附近，隔天搭火車去花蓮最方便。", q:"台北車站"},
+        {t:"18:30", k:"food", n:"台北車站附近晚餐、逛逛", d:"台北地下街、京站、微風台北車站美食街選擇多，挑不含牛肉的餐點，吃完在車站周邊逛逛就回酒店休息。", h:"商場約 11:00–21:30", q:"台北車站 美食",
+          go:{k:"walk", m:"步行", d:"酒店 → 台北車站一帶", t:"約 5–10 分"}}
       ],
-      tips:["西門町和寧夏夜市距離不近，累了就只去寧夏夜市。","第一晚早點休息，隔天要趕早班高鐵。"]
+      tips:["第一晚早點休息，隔天要搭早上的火車去花蓮。"]
     },
-    { id:"d2", date:"4/24", wk:"週六", title:"彩虹眷村、高美日落和逢甲夜市", route:"台北 → 台中",
-      stay:{name:"台中車站附近（連住2晚）", q:"台中車站"}, weather:"台中 20–29°C，偶有陣雨",
+    { id:"d2", date:"4/24", wk:"週六", title:"到花蓮：松園別館和東大門夜市", route:"台北 → 花蓮",
+      stay:{name:"花蓮市區（連住2晚）", q:"花蓮火車站"}, weather:"花蓮 19–27°C，山區易起霧",
       items:[
-        {t:"09:00", k:"transit", n:"高鐵 台北 → 台中", d:"約1小時，約 NT$700。台北高鐵站和台鐵、捷運同在台北車站。", q:"台灣高鐵台中站"},
-        {t:"10:15", k:"transit", n:"台鐵到台中車站，酒店寄放行李", d:"高鐵台中站步行接台鐵新烏日站，搭區間車到台中站，約15分鐘，約 NT$15–25。", q:"台中車站"},
-        {t:"11:00", k:"sight", n:"彩虹眷村", d:"週末人多，越早越好拍。", h:"約 08:00–17:00", q:"彩虹眷村 台中",
-          go:{k:"taxi", m:"打車", d:"台中車站 → 彩虹眷村，公共交通需換乘且班次少", t:"約 25 分", c:"約 NT$250–350", alt:"公車也可到，但要轉乘，先用 Google 地圖查當時班次"}},
-        {t:"12:30", k:"food", n:"第二市場午餐", d:"肉包、滷肉飯等，避開牛肉麵和牛肉湯。", h:"約上午至午後，各攤不同", q:"台中第二市場",
-          go:{k:"taxi", m:"打車", d:"彩虹眷村 → 第二市場", t:"約 25 分", c:"約 NT$250–300", alt:"公車到台中車站再步行約 10 分，約 40–50 分"}},
-        {t:"14:00", k:"transit", n:"回酒店入住、休息", d:"下午留一段休息，晚上才不會累。", q:"台中車站",
-          go:{k:"walk", m:"步行", d:"第二市場 → 台中車站附近酒店", t:"約 10–15 分"}},
-        {t:"15:15", k:"transit", n:"台中車站搭 309 公車去高美溼地", d:"309 是高美專線，約75分鐘，班次約每1–2小時一班，先查台中公車即時資訊，別錯過班次；票價約 NT$47–90，以官網為準。想省時間可叫車，約45分鐘，約 NT$700–900。", q:"台中車站 309 高美濕地"},
-        {t:"17:00", k:"sight", n:"高美溼地看日落", d:"木棧道散步，日落約 18:15 左右。漲潮時倒影最漂亮。", h:"戶外全天開放", q:"高美濕地 遊客中心"},
-        {t:"19:30", k:"food", n:"逢甲夜市", d:"大腸包小腸、蚵仔煎、臭豆腐、雞排、青蛙撞奶，牛排和牛肉串跳過，點前問一句有沒有牛肉。週六人多，慢慢逛。", h:"約 17:00–24:00", q:"逢甲夜市 台中",
-          go:{k:"taxi", m:"叫車 / 包車", d:"高美溼地 → 逢甲夜市，沒有直達公共交通，天黑後班次更少", t:"約 40 分", c:"約 NT$700–900", alt:"到高美時就訂好回程車，或包車往返約 NT$2,500–3,500（先詢價）。也可 309 回台中車站再轉車，約75分鐘"}},
-        {t:"21:30", k:"transit", n:"叫車回酒店", d:"逢甲到台中車站約8公里，車程約20分鐘，約 NT$250。明早要趕日月潭巴士，別逛太晚。", q:"台中車站"}
-      ],
-      tips:["出發前查氣象署當天的潮汐和日落時間。","穿防水或好清洗的鞋，溼地風大，帶件外套。","住台中車站附近：明早步行約6分鐘到日月潭巴士站，也方便逛一中街。","309 平日班次少，4/24 是週六，班次以官網為準。"]
-    },
-    { id:"d3", date:"4/25", wk:"週日", title:"日月潭一整天", route:"台中 → 日月潭 → 台中",
-      stay:{name:"台中車站附近（同一間）", q:"台中車站"}, weather:"日月潭 15–25°C，早晚偏涼",
-      items:[
-        {t:"07:30", k:"transit", n:"台中車站搭台灣好行日月潭線", d:"在台中車站民族路口（建國路103號前）上車，約1.5–2小時，單程約 NT$193。這條路線有預約班次，週日人多，建議先查官網並訂位，上車前確認是往日月潭方向。", q:"台中車站民族路口"},
-        {t:"09:30", k:"sight", n:"水社碼頭搭船遊湖", d:"週日人多，越早越好。", h:"約 08:30–17:00（依季節）", q:"水社碼頭 日月潭",
-          go:{k:"walk", m:"步行", d:"日月潭線終點站 → 水社碼頭，站在湖邊幾分鐘內", t:"約 5 分"}},
-        {t:"10:30", k:"sight", n:"玄光寺", d:"船先靠玄光寺碼頭，眺望日月潭景色的經典點。", q:"玄光寺 日月潭",
-          go:{k:"pub", m:"船", d:"水社碼頭 → 玄光寺碼頭", t:"約 10 分", c:"遊湖船票約 NT$300，可多站上下船，出發前確認"}},
-        {t:"11:30", k:"sight", n:"伊達邵老街", d:"邵族文化街，吃小吃、買手信。", h:"店家約 09:00–18:00", q:"伊達邵老街 日月潭",
-          go:{k:"pub", m:"船", d:"玄光寺 → 伊達邵碼頭", t:"約 10 分", c:"同一張船票"}},
-        {t:"12:30", k:"food", n:"午餐：茶葉蛋、鱒魚、香菇飯", d:"阿婆茶葉蛋是招牌小吃。", q:"阿婆茶葉蛋 日月潭",
-          go:{k:"walk", m:"步行", d:"老街內", t:"約 5 分"}},
-        {t:"14:00", k:"sight", n:"日月潭纜車", d:"從湖邊升到山上，俯瞰整個日月潭。", h:"約 10:00–16:30，平日和假日略有不同", q:"日月潭纜車",
-          go:{k:"walk", m:"步行", d:"伊達邵 → 纜車站，沿湖邊走", t:"約 15 分", alt:"環湖公車或計程車約 5 分"}},
-        {t:"16:30", k:"transit", n:"離開日月潭，回台中", d:"搭台灣好行日月潭線回台中，約1.5–2小時。提前出發避開下班車潮。", q:"台中車站",
-          go:{k:"pub", m:"船 / 環湖公車", d:"纜車站 → 水社碼頭，回程車站附近", t:"約 20–30 分", alt:"計程車約 10 分，約 NT$150–200"}},
-        {t:"19:30", k:"food", n:"宮原眼科", d:"冰淇淋和伴手禮，晚上人較少。", h:"約 10:00–22:00", q:"宮原眼科 台中",
-          go:{k:"walk", m:"步行", d:"台中車站 / 酒店 → 宮原眼科（中山路）", t:"約 5–10 分"}},
-        {t:"20:30", k:"sight", n:"一中街", d:"小吃、臭豆腐、雞排、烤玉米，逛完就回酒店。", h:"商家約 11:00–22:30", q:"一中街夜市 台中",
-          go:{k:"walk", m:"步行", d:"宮原眼科 → 一中街", t:"約 20 分", alt:"打車約 10 分，約 NT$100–130"}}
-      ],
-      tips:["日月潭回來會有點累，宵夜逛一中街就好，別再加景點。","宮原眼科晚上排隊較短，太多人就買外帶。"]
-    },
-    { id:"d4", date:"4/26", wk:"週一", title:"轉車到花蓮", route:"台中 → 台北 → 花蓮",
-      stay:{name:"花蓮市區", q:"花蓮火車站"}, weather:"花蓮 19–27°C，山區易起霧",
-      items:[
-        {t:"09:30", k:"transit", n:"台中 → 台北（台鐵轉高鐵）", d:"約 08:30 從酒店出發：台中站搭台鐵到新烏日站，步行接高鐵台中站，再搭高鐵到台北，約1小時，約 NT$700。", q:"台灣高鐵台北站"},
-        {t:"11:30", k:"transit", n:"台鐵 台北 → 花蓮", d:"高鐵和台鐵在台北車站同一棟，步行約10分轉乘。搭太魯閣號或普悠瑪號，約2小時，約 NT$440。座位搶手，務必提前訂好。", q:"台北車站 台鐵"},
-        {t:"15:00", k:"transit", n:"到花蓮，酒店放行李", d:"抵達時間依所訂班次。", q:"花蓮火車站"},
-        {t:"16:30", k:"sight", n:"七星潭", d:"海岸線、卵石灘，適合騎單車看海。", h:"戶外全天開放", q:"七星潭風景區 花蓮",
-          go:{k:"taxi", m:"打車", d:"花蓮車站 → 七星潭，公車班次少", t:"約 20 分", c:"約 NT$250–300", alt:"部分酒店有免費單車，騎到七星潭約 20 分"}},
+        {t:"07:00", k:"food", n:"阜杭豆漿", d:"鹹豆漿、燒餅油條。週六排隊可能要 30–60 分鐘，排太久就外帶，注意火車時間。行李可以先放酒店，吃完再回去拿。", h:"約 05:30–12:30，週一休", q:"阜杭豆漿 台北",
+          go:{k:"pub", m:"捷運", d:"台北車站 → 善導寺站（板南線，1站），出站步行約 5 分", t:"約 10 分", c:"約 NT$20"}},
+        {t:"09:00", k:"transit", n:"台鐵 台北 → 花蓮", d:"搭太魯閣號或普悠瑪號，約2小時，約 NT$440。週六座位很搶手，開放訂票當天就要訂好。", q:"台北車站 台鐵",
+          go:{k:"pub", m:"捷運", d:"善導寺站 → 台北車站（板南線，1站），回酒店拿行李再進站", t:"約 10 分", c:"約 NT$20"}},
+        {t:"11:30", k:"transit", n:"到花蓮，酒店寄放行李", d:"抵達時間依所訂班次，先寄放行李，下午再入住。", q:"花蓮火車站"},
+        {t:"12:00", k:"food", n:"炸彈蔥油餅", d:"當午餐，排隊時間不一定，可以邊走邊吃。", q:"花蓮炸彈蔥油餅",
+          go:{k:"taxi", m:"打車", d:"花蓮車站 → 市區", t:"約 10 分", c:"約 NT$150"}},
+        {t:"13:30", k:"sight", n:"松園別館", d:"日式建築和松林，可以眺望太平洋，下午光線好拍照。", h:"約 09:00–17:00，公休日請查地圖", q:"松園別館 花蓮",
+          go:{k:"taxi", m:"打車", d:"市區 → 松園別館", t:"約 10 分", c:"約 NT$150", alt:"步行約 20–30 分"}},
+        {t:"15:30", k:"transit", n:"回酒店入住、休息", d:"休息一下，明天要早起去賞鯨。", q:"花蓮火車站"},
         {t:"18:30", k:"food", n:"東大門夜市", d:"炸彈蔥油餅、原住民小吃。", h:"傍晚起營業，請查地圖", q:"花蓮東大門夜市",
-          go:{k:"taxi", m:"打車", d:"七星潭 → 東大門夜市，公共交通不方便", t:"約 20 分", c:"約 NT$300"}},
+          go:{k:"walk", m:"步行 / 打車", d:"酒店 → 東大門夜市", t:"步行約 15–20 分，打車約 5 分", c:"打車約 NT$100"}},
         {t:"21:00", k:"food", n:"公正包子", d:"招牌宵夜，肉包和菜包都不含牛肉。", q:"花蓮公正包子",
           go:{k:"walk", m:"步行 / 打車", d:"東大門夜市 → 公正包子", t:"步行約 20 分，打車約 5 分", c:"打車約 NT$100"}}
       ],
-      tips:["這天轉車較長，行李輕一點更省力。","火車訂不到時，可換班次或改搭客運，先查台鐵官網。"]
+      tips:["台鐵太魯閣號、普悠瑪號座位搶手，4/24 是週六，務必提前訂。","火車訂不到時，可換班次或改搭客運，先查台鐵官網。"]
     },
-    { id:"d5", date:"4/27", wk:"週二", title:"太魯閣一日遊", route:"花蓮市 ⇄ 太魯閣",
-      stay:{name:"花蓮市區（同一間）", q:"花蓮火車站"}, weather:"山區多雲，易有陣雨",
+    { id:"d3", date:"4/25", wk:"週日", title:"賞鯨、清水斷崖和七星潭", route:"花蓮港 → 清水斷崖 → 七星潭",
+      stay:{name:"花蓮市區（同一間）", q:"花蓮火車站"}, weather:"花蓮 19–27°C，海況不好時賞鯨可能取消",
       items:[
-        {t:"07:30", k:"transit", n:"包車出發", d:"太魯閣景點分散、公車班次少，建議包車，約 NT$3,000–4,500/車，先向司機詢價。公共交通替代：台鐵到新城站，轉檯灣好行太魯閣線（約每小時一班，一日券約 NT$150）。行程照公路順序由東往西走，不走回頭路。", q:"太魯閣牌樓"},
-        {t:"08:30", k:"sight", n:"太魯閣牌樓、遊客中心", d:"峽谷公路常因落石或地震管制，先看遊客中心或國家公園官網的當天路況公告。", h:"遊客中心約 08:30–17:00", q:"太魯閣國家公園遊客中心",
-          go:{k:"taxi", m:"包車", d:"花蓮市區 → 太魯閣牌樓", t:"約 30 分", alt:"台鐵花蓮 → 新城站約 15 分，再轉檯灣好行"}},
-        {t:"09:00", k:"sight", n:"砂卡礑步道", d:"平緩好走，溪水顏色漂亮，走一小段再折返就好。", h:"約 08:30–17:00，依路況開放", q:"砂卡礑步道 花蓮",
-          go:{k:"taxi", m:"包車", d:"牌樓 → 砂卡礑步道", t:"約 5–10 分"}},
-        {t:"10:30", k:"sight", n:"長春祠", d:"瀑布與山壁間的祠廟。", h:"戶外，依路況開放", q:"長春祠 太魯閣",
-          go:{k:"taxi", m:"包車", d:"砂卡礑 → 長春祠", t:"約 10 分", alt:"台灣好行太魯閣線沿途停靠，約每小時一班"}},
-        {t:"11:30", k:"sight", n:"燕子口", d:"峽谷巖壁與河谷，步道沿著舊公路走。", h:"戶外，依路況開放", q:"燕子口 太魯閣",
-          go:{k:"taxi", m:"包車", d:"長春祠 → 燕子口", t:"約 12 分"}},
-        {t:"12:30", k:"sight", n:"九曲洞", d:"沿著峽谷步道走，路況好時可通行。", h:"戶外，依路況開放", q:"九曲洞 太魯閣",
-          go:{k:"taxi", m:"包車", d:"燕子口 → 九曲洞", t:"約 5 分"}},
-        {t:"13:30", k:"food", n:"天祥午餐", d:"簡單吃飯休息，可順路看祥德寺、普渡橋。", q:"天祥 太魯閣",
-          go:{k:"taxi", m:"包車", d:"九曲洞 → 天祥", t:"約 20 分"}},
-        {t:"15:00", k:"transit", n:"天祥回花蓮市區", d:"約1小時。", q:"花蓮火車站"},
-        {t:"17:30", k:"food", n:"液香扁食", d:"豬肉餛飩，不含牛肉。", q:"花蓮液香扁食",
-          go:{k:"walk", m:"步行 / 打車", d:"酒店 → 液香扁食，都在市區", t:"約 5–10 分"}},
-        {t:"19:00", k:"food", n:"曾記麻糬", d:"嚐鮮就好，要帶回去的份量 4/28 離開花蓮前再買（儲存期短）。", q:"花蓮曾記麻糬",
-          go:{k:"walk", m:"步行 / 打車", d:"液香扁食 → 曾記麻糬，市區內", t:"約 5–10 分", c:"打車約 NT$100"}}
+        {t:"08:30", k:"transit", n:"前往花蓮港賞鯨碼頭集合", d:"集合時間和地點以跟團的預訂確認信為準，提早 15–20 分鐘到。有加購接送的話在酒店等車。", q:"多羅滿賞鯨 花蓮港",
+          go:{k:"taxi", m:"打車", d:"花蓮市區酒店 → 花蓮港", t:"約 10 分", c:"約 NT$150"}},
+        {t:"09:00", k:"sight", n:"多羅滿海洋賞鯨導覽體驗", d:"跟團出海約 2–2.5 小時（含解說）。4–10 月是賞鯨季，但海況不好可能取消或改期。會暈船的話，出發前 30 分鐘先吃暈船藥，帶防曬和薄外套。", h:"出發時段以預訂為準", q:"多羅滿賞鯨 花蓮港"},
+        {t:"12:00", k:"food", n:"液香扁食", d:"豬肉餛飩，不含牛肉，上岸後當午餐。", q:"花蓮液香扁食",
+          go:{k:"taxi", m:"打車", d:"花蓮港 → 市區", t:"約 10 分", c:"約 NT$150"}},
+        {t:"13:30", k:"sight", n:"清水斷崖", d:"從匯德或崇德的觀景點眺望斷崖和太平洋，是蘇花公路的經典景色。公路車多、偶有落石管制，出發前看路況公告。", h:"戶外，依路況開放", q:"清水斷崖 匯德景觀步道",
+          go:{k:"taxi", m:"包車 / 跟團", d:"花蓮市區 → 清水斷崖，若跟團行程有包含就照團方安排", t:"約 50–60 分", c:"包車半天約 NT$2,000–3,000（先詢價）", alt:"台鐵到崇德站再走一段，但班次少，不太方便"}},
+        {t:"16:30", k:"sight", n:"七星潭", d:"海岸線、卵石灘，傍晚光線最好看，適合散步看海。", h:"戶外全天開放", q:"七星潭風景區 花蓮",
+          go:{k:"taxi", m:"包車 / 跟團", d:"清水斷崖 → 七星潭", t:"約 40 分"}},
+        {t:"18:30", k:"food", n:"花蓮市區晚餐", d:"回市區吃晚餐，選不含牛肉的餐廳。", q:"花蓮市區 餐廳",
+          go:{k:"taxi", m:"打車", d:"七星潭 → 花蓮市區", t:"約 20 分", c:"約 NT$250–300"}},
+        {t:"20:00", k:"food", n:"曾記麻糬", d:"嚐鮮就好。麻糬保存期短，後面還有 6 天行程，不建議買來帶回家。", q:"花蓮曾記麻糬",
+          go:{k:"walk", m:"步行 / 打車", d:"市區內", t:"約 5–10 分", c:"打車約 NT$100"}}
       ],
-      tips:["若太魯閣部分路段封閉，備案：七星潭、鯉魚潭、清水斷崖。","山區變天快，帶雨具和薄外套。"]
+      tips:["賞鯨前一天看預訂平台的通知，海況不好會改期或退費，先看清楚退改規則。","清水斷崖、七星潭如果不在團內，前一天先約好包車或叫車。","明天一早搭火車離開花蓮，今晚先把行李整理好。"]
     },
-    { id:"d6", date:"4/28", wk:"週三", title:"回台北，傍晚逛永康街", route:"花蓮 → 台北",
-      stay:{name:"台北車站附近（連住3晚）", q:"台北車站"}, weather:"台北 18–27°C，陣雨",
+    { id:"d4", date:"4/26", wk:"週一", title:"回台北，下午休息", route:"花蓮 → 台北",
+      stay:{name:"台北車站附近（連住5晚）", q:"台北車站"}, weather:"台北 18–27°C，陣雨",
       items:[
-        {t:"09:30", k:"sight", n:"松園別館", d:"日式建築和松林，晨間散步。", h:"約 09:00–17:00，公休日請查地圖", q:"松園別館 花蓮",
-          go:{k:"taxi", m:"打車", d:"花蓮車站附近酒店 → 松園別館", t:"約 10 分", c:"約 NT$150", alt:"步行約 30 分，公車班次少"}},
-        {t:"11:30", k:"food", n:"炸彈蔥油餅", d:"當午餐或路上吃。", q:"花蓮炸彈蔥油餅",
-          go:{k:"walk", m:"步行 / 打車", d:"松園別館 → 市區", t:"約 10 分"}},
-        {t:"13:30", k:"transit", n:"台鐵 花蓮 → 台北", d:"約2小時，約 NT$440，座位需提前訂。", q:"花蓮火車站"},
-        {t:"16:30", k:"transit", n:"台北酒店入住", d:"連住3晚到5/1，不用再換酒店。", q:"台北車站"},
-        {t:"17:30", k:"sight", n:"永康街", d:"咖啡店、小店、豆花、芒果冰。", h:"商家約 11:00–21:00", q:"永康街 台北",
-          go:{k:"pub", m:"捷運", d:"台北車站 → 東門站（淡水信義線，3站），5號出口附近", t:"約 8 分", c:"約 NT$20"}},
-        {t:"19:00", k:"food", n:"鼎泰豐 信義店", d:"小籠包、蛋炒飯、雞湯，都沒有牛肉。可先在官網或現場抽號。", h:"約 10:00–21:00", q:"鼎泰豐 信義店",
-          go:{k:"walk", m:"步行", d:"永康街 → 信義路二段，鼎泰豐在東門站附近", t:"約 5 分"}},
-        {t:"20:30", k:"sight", n:"台北101 夜景", d:"外面看夜景，或登觀景台。", h:"觀景台約 09:00–22:00", q:"台北101",
-          go:{k:"pub", m:"捷運", d:"東門站 → 台北101/世貿站（淡水信義線，4站）", t:"約 10 分", c:"約 NT$20–25"}}
+        {t:"08:00", k:"food", n:"花蓮早餐、退房", d:"在酒店或花蓮車站附近吃早餐，吃完退房。", q:"花蓮火車站 早餐"},
+        {t:"09:00", k:"transit", n:"台鐵 花蓮 → 台北", d:"搭太魯閣號或普悠瑪號，約2小時，約 NT$440，座位需提前訂。", q:"花蓮火車站"},
+        {t:"11:30", k:"food", n:"台北酒店寄放行李、午餐", d:"從今天連住5晚到5/1，不用再換酒店。先寄放行李，在台北車站或地下街吃午餐，挑不含牛肉的餐點。", q:"台北車站 美食",
+          go:{k:"walk", m:"步行", d:"台北車站 → 車站附近酒店", t:"約 5–10 分"}},
+        {t:"14:00", k:"transit", n:"入住、休息", d:"玩了花蓮三天，下午好好休息、洗衣服、整理行李。", q:"台北車站"},
+        {t:"18:30", k:"food", n:"台北車站附近晚餐", d:"台北地下街、京站或華山市場周邊，選不含牛肉的餐點，吃完早點休息。", q:"台北車站 美食",
+          go:{k:"walk", m:"步行", d:"酒店 → 台北車站一帶", t:"約 5–10 分"}}
       ],
-      tips:["回台北後行程較滿，早點休息。"]
+      tips:["這天只坐一段火車，行程排得很鬆，累了就多睡一點。","火車訂不到時，可換班次或改搭客運，先查台鐵官網。"]
     },
-    { id:"d7", date:"4/29", wk:"週四", title:"台北經典一日", route:"象山 → 故宮 → 士林夜市",
-      stay:{name:"台北車站附近（同一間）", q:"台北車站"}, weather:"台北 18–27°C",
+    { id:"d5", date:"4/27", wk:"週二", title:"象山、信義、華山1914 和西門町", route:"象山 → 信義 → 華山 → 西門町",
+      stay:{name:"台北車站附近（同一間）", q:"台北車站"}, weather:"台北 18–27°C，陣雨",
       items:[
-        {t:"07:30", k:"food", n:"阜杭豆漿", d:"鹹豆漿、燒餅油條，常排隊。", h:"約 05:30–12:30，週一休", q:"阜杭豆漿 台北",
-          go:{k:"pub", m:"捷運", d:"台北車站 → 善導寺站（板南線，1站），出站步行約 5 分", t:"約 10 分", c:"約 NT$20"}},
-        {t:"09:00", k:"sight", n:"象山步道", d:"爬約20–30分鐘到觀景台，看101全景。", h:"戶外全天開放", q:"象山步道 台北",
-          go:{k:"pub", m:"捷運", d:"善導寺站 → 台北車站 → 換淡水信義線到象山站（終點站）", t:"約 25 分", c:"約 NT$25"}},
-        {t:"12:00", k:"food", n:"信義區午餐", d:"選雞肉飯、滷肉飯或日式料理。", q:"台北信義區 餐廳",
-          go:{k:"pub", m:"捷運", d:"象山站 → 台北101/世貿站，1站", t:"約 3 分", c:"約 NT$20", alt:"步行約 15 分"}},
-        {t:"13:30", k:"sight", n:"國立故宮博物院", d:"翠玉白菜、肉形石。", h:"約 09:00–17:00，請查地圖", q:"國立故宮博物院",
-          go:{k:"pub", m:"捷運 + 公車", d:"台北101/世貿站 → 士林站（淡水信義線），出站搭公車（如紅30、小18、小19，請看站牌）到故宮", t:"約 60–70 分", c:"約 NT$45", alt:"打車約 40 分，約 NT$450–550"}},
-        {t:"17:30", k:"food", n:"士林夜市", d:"大餅包小餅、雞排、鹽酥雞。", h:"約 16:00–24:00", q:"士林夜市",
-          go:{k:"pub", m:"公車", d:"故宮 → 士林站方向，再步行約 15 分到夜市，或在劍潭站附近下車", t:"約 30–40 分", c:"約 NT$15", alt:"打車約 15–20 分，約 NT$200–250"}}
+        {t:"08:00", k:"sight", n:"象山步道", d:"早上人少、比較涼，爬約20–30分鐘到觀景台看101全景。", h:"戶外全天開放", q:"象山步道 台北",
+          go:{k:"pub", m:"捷運", d:"台北車站 → 象山站（淡水信義線，終點站）", t:"約 20 分", c:"約 NT$25"}},
+        {t:"09:45", k:"food", n:"四四南村吃早餐", d:"老眷村改建的文創聚落，就在101旁邊，可以在好丘吃貝果早餐、拍101。", h:"店家約 09:00–18:00", q:"四四南村",
+          go:{k:"walk", m:"步行", d:"象山步道 → 四四南村", t:"約 15 分"}},
+        {t:"11:00", k:"sight", n:"台北101・信義商圈", d:"逛信義區百貨和101，想看高空景色可以上101觀景台（要另外買票）。", h:"商場約 11:00–21:30，觀景台約 10:00–21:00", q:"台北101",
+          go:{k:"walk", m:"步行", d:"四四南村 → 台北101", t:"約 10 分"}},
+        {t:"12:30", k:"food", n:"信義區午餐", d:"101 和周邊百貨美食街選擇多，也可以吃鼎泰豐 101店（現場先抽號）。挑不含牛肉的餐點。", q:"台北101 美食",
+          go:{k:"walk", m:"步行", d:"信義商圈內", t:"約 5 分"}},
+        {t:"14:30", k:"sight", n:"華山1914文創園區", d:"老酒廠改建的文創園區，逛展覽、文創小店和咖啡店。展覽開放時間不一，出發前看官網。", h:"園區戶外全天，店家約 11:00–21:00", q:"華山1914文化創意產業園區",
+          go:{k:"pub", m:"捷運", d:"台北101/世貿站 → 大安站（淡水信義線）→ 換文湖線到忠孝復興站 → 換板南線到忠孝新生站", t:"約 25 分", c:"約 NT$25", alt:"打車約 15 分，約 NT$200"}},
+        {t:"16:30", k:"sight", n:"西門町逛街", d:"逛街、潮流小店、紅樓，吃豆花或雞排當點心。", h:"店家約 11:00–22:00", q:"西門町 台北",
+          go:{k:"pub", m:"捷運", d:"忠孝新生站 → 西門站（板南線，3站）", t:"約 10 分", c:"約 NT$20"}},
+        {t:"18:30", k:"food", n:"西門町附近晚餐", d:"周邊選擇多：阿宗麵線、鴨肉扁、雞排、日式料理，挑不含牛肉的店。", q:"西門町 美食",
+          go:{k:"walk", m:"步行", d:"西門町內", t:"約 5 分"}},
+        {t:"20:00", k:"transit", n:"捷運回酒店", d:"西門站 → 台北車站，板南線 1 站，約 5 分鐘。", q:"台北車站"}
       ],
-      tips:["下雨時，把象山換成博物館或商場。"]
+      tips:["這天走路多，穿好走的鞋；下雨的話象山改成101觀景台。","西門町晚上人多，熱門小吃先排。"]
     },
-    { id:"d8", date:"4/30", wk:"週五", title:"九份、十分與北投湯屋", route:"台北 → 九份 → 十分 → 北投 → 台北",
+    { id:"d6", date:"4/28", wk:"週三", title:"中山赤峰街、淡水紅毛城和漁人碼頭日落", route:"中山 → 淡水 → 漁人碼頭",
+      stay:{name:"台北車站附近（同一間）", q:"台北車站"}, weather:"台北 18–27°C，海邊傍晚風大",
+      items:[
+        {t:"09:30", k:"food", n:"酒店附近早餐", d:"在台北車站一帶吃早餐，不用太趕。", q:"台北車站 早餐"},
+        {t:"10:30", k:"sight", n:"中山站・赤峰街", d:"老街巷裡的選物店、咖啡店和文青小店，沿著中山站的林蔭步道散步。有些店 11:00 或中午才開。", h:"店家約 11:00–21:00", q:"赤峰街 中山站",
+          go:{k:"pub", m:"捷運", d:"台北車站 → 中山站（淡水信義線，1站）", t:"約 5 分", c:"約 NT$20", alt:"步行約 15 分"}},
+        {t:"12:00", k:"food", n:"中山站附近午餐", d:"巷子裡的小餐館、咖啡簡餐選擇多，挑不含牛肉的。", q:"中山站 美食",
+          go:{k:"walk", m:"步行", d:"赤峰街一帶", t:"約 5 分"}},
+        {t:"13:30", k:"sight", n:"淡水紅毛城", d:"三百多年歷史的紅磚古蹟，可以俯瞰淡水河口，旁邊就是真理大學和淡江中學。", h:"約 09:30–17:00，休館日請查官網", q:"淡水紅毛城",
+          go:{k:"pub", m:"捷運 + 公車", d:"中山站 → 淡水站（淡水信義線，終點站）→ 搭紅26 到紅毛城", t:"約 50 分", c:"約 NT$60", alt:"淡水站步行到紅毛城約 20 分，沿河邊走"}},
+        {t:"15:00", k:"sight", n:"淡水老街", d:"阿給、魚丸湯、鐵蛋，沿著淡水河邊散步。阿給內餡多是豬肉，點前可再問一句。", h:"店家約 10:00–21:00", q:"淡水老街",
+          go:{k:"walk", m:"步行", d:"紅毛城 → 淡水老街，下坡沿河邊走", t:"約 15 分"}},
+        {t:"16:45", k:"sight", n:"淡水漁人碼頭看日落", d:"情人橋看夕陽，日落約 18:20 左右，傍晚海風大，帶件外套。", h:"戶外全天開放", q:"淡水漁人碼頭 情人橋",
+          go:{k:"pub", m:"公車 / 渡輪", d:"淡水老街 → 漁人碼頭，搭紅26公車，或在淡水渡船頭搭渡輪", t:"約 15–20 分", c:"公車約 NT$15，渡輪約 NT$60", alt:"打車約 10 分，約 NT$150"}},
+        {t:"19:00", k:"food", n:"淡水晚餐", d:"回到淡水老街一帶吃晚餐，或直接回台北再吃。", q:"淡水老街 美食",
+          go:{k:"pub", m:"公車 / 渡輪", d:"漁人碼頭 → 淡水老街", t:"約 15–20 分"}},
+        {t:"20:30", k:"transit", n:"捷運回台北車站", d:"淡水站 → 台北車站，約40分鐘，約 NT$50。日落後回程人多，留意末班車時間。", q:"淡水站"}
+      ],
+      tips:["出發前查一下當天的日落時間和天氣，下雨就把漁人碼頭換成老街咖啡店。","明天九份十分要早起，看完日落就回酒店。"]
+    },
+    { id:"d7", date:"4/29", wk:"週四", title:"九份、十分與北投湯屋", route:"台北 → 九份 → 十分 → 北投 → 台北",
       stay:{name:"台北車站附近（同一間）", q:"台北車站"}, weather:"北部山區易起霧，帶雨具",
       items:[
         {t:"08:30", k:"transit", n:"台鐵 台北 → 瑞芳", d:"區間車或區間快約40–50分鐘，約 NT$50。到瑞芳後，在車站前搭公車（如 788 號，請看站牌）到九份。", q:"瑞芳車站"},
-        {t:"10:30", k:"sight", n:"九份老街", d:"茶樓、老街、山城景色。週末遊客多，早到較好。", h:"店家約 10:00–20:00", q:"九份老街",
+        {t:"10:30", k:"sight", n:"九份老街", d:"茶樓、老街、山城景色。平日人比週末少，早到更好逛。", h:"店家約 10:00–20:00", q:"九份老街",
           go:{k:"pub", m:"公車", d:"瑞芳車站 → 九份老街", t:"約 20 分", c:"約 NT$15–30", alt:"打車約 15 分，約 NT$300–400"}},
         {t:"11:30", k:"food", n:"阿柑姨芋圓", d:"招牌甜品，芋圓不含牛肉。", q:"阿柑姨芋圓 九份",
           go:{k:"walk", m:"步行", d:"老街內，沿豎崎路走", t:"約 5–10 分"}},
         {t:"14:00", k:"sight", n:"十分老街放天燈", d:"沿平溪線火車鐵道，寫願望放天燈，天氣差時可能暫停。", h:"約 09:00–17:30", q:"十分老街 天燈",
           go:{k:"pub", m:"公車 + 火車", d:"九份 → 瑞芳（公車約 20 分）→ 平溪線火車到十分（約 30 分，班次約每小時一到兩班，先看時刻表）", t:"約 1–1.5 小時", c:"約 NT$50–70", alt:"打車或包車直接過去約 35 分，約 NT$600–800"}},
-        {t:"16:30", k:"transit", n:"回台北", d:"平溪線到瑞芳，再轉檯鐵回台北，約1.5–2小時。", q:"十分車站"},
-        {t:"19:30", k:"sight", n:"新北投泡湯屋", d:"訂一間雙人湯屋，泡1.5–2小時。週五晚上可能要候位，建議先預約。", q:"新北投站",
+        {t:"16:30", k:"transit", n:"回台北", d:"平溪線到瑞芳，再轉台鐵回台北，約1.5–2小時。", q:"十分車站"},
+        {t:"19:30", k:"sight", n:"新北投泡湯屋", d:"訂一間雙人湯屋，泡1.5–2小時。晚上可能要候位，建議先預約。", q:"新北投站",
           go:{k:"pub", m:"捷運", d:"台北車站 → 北投站（淡水信義線）→ 換新北投支線到新北投站", t:"約 35 分", c:"約 NT$30"}},
         {t:"21:30", k:"food", n:"北投宵夜", d:"選不含牛肉的餐廳，泡完湯吃點熱的。", q:"北投 餐廳",
           go:{k:"walk", m:"步行", d:"湯屋 → 新北投站周邊", t:"約 5–10 分"}},
@@ -1485,14 +1519,28 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       ],
       tips:["九份十分行程滿，中午前一定要到九份。","若因下雨無法放天燈，可改逛老街、喝茶、買手信。","湯屋價格、時段和是否需要預約，出發前到各家官網或地圖頁確認。"]
     },
+    { id:"d8", date:"4/30", wk:"週五", title:"大稻埕：永樂市場、迪化街和寧夏夜市", route:"永樂市場 → 迪化街 → 寧夏夜市",
+      stay:{name:"台北車站附近（同一間）", q:"台北車站"}, weather:"台北 18–27°C",
+      items:[
+        {t:"08:30", k:"food", n:"永樂市場吃早餐", d:"市場周邊早餐攤多，例如旗魚米粉湯、油飯、粉粿，很多攤位只做早上，早點去。", h:"多數攤位早上到中午", q:"永樂市場 台北",
+          go:{k:"pub", m:"捷運", d:"台北車站 → 北門站（松山新店線，1站），出站步行約 10 分", t:"約 15 分", c:"約 NT$20", alt:"打車約 10 分，約 NT$120–150"}},
+        {t:"10:00", k:"sight", n:"迪化街南段", d:"逛茶行、乾貨和特色小店，順路看霞海城隍廟。茶葉可以請店家推薦試喝。", h:"店家約 09:00–18:00", q:"迪化街 南段 大稻埕",
+          go:{k:"walk", m:"步行", d:"永樂市場 → 迪化街南段，就在旁邊", t:"約 3–5 分"}},
+        {t:"12:00", k:"food", n:"午餐：賣麵炎仔或周邊傳統麵店", d:"切仔麵、紅燒肉、粉腸等古早味小吃。營業時間不長，賣完就收，早點去。", h:"營業時間請查地圖", q:"賣麵炎仔 大稻埕",
+          go:{k:"walk", m:"步行", d:"迪化街 → 安西街一帶", t:"約 10 分"}},
+        {t:"14:00", k:"transit", n:"回飯店休息", d:"把買的手信放回酒店，休息到傍晚。", q:"台北車站",
+          go:{k:"pub", m:"捷運 / 打車", d:"大稻埕 → 北門站 → 台北車站", t:"約 20 分", c:"約 NT$20", alt:"打車約 10 分，約 NT$120–150"}},
+        {t:"18:00", k:"food", n:"寧夏夜市", d:"晚餐就在這裡：蚵仔煎、滷肉飯、雞肉飯、豆花、芋泥球。點滷味和湯品先問有沒有牛肉。", h:"約 17:00–24:00", q:"寧夏夜市 台北",
+          go:{k:"pub", m:"捷運", d:"台北車站 → 雙連站（淡水信義線，2站），出站步行約 5 分", t:"約 10 分", c:"約 NT$20", alt:"步行約 20 分"}}
+      ],
+      tips:["永樂市場和迪化街部分店家週日或週一公休，4/30 是週五，大多有開。","明天就要回程，今晚先把行李和手信整理好。"]
+    },
     { id:"d9", date:"5/1", wk:"週六", title:"回程", route:"台北 → 桃園",
       stay:{name:"回吉隆坡", q:"桃園國際機場第一航廈"}, weather:"台北 18–27°C",
       items:[
-        {t:"08:00", k:"transit", n:"退房，行李寄放酒店", d:"5/1 是勞動節，市區和機場人多，預留多一點時間。輕裝去逛街。", q:"台北車站"},
-        {t:"09:00", k:"sight", n:"迪化街買手信", d:"乾貨、鳳梨酥、茶葉。", h:"約 09:00–18:00", q:"迪化街 台北",
-          go:{k:"pub", m:"捷運", d:"台北車站 → 中山站（淡水信義線）→ 換松山新店線到北門站，再步行約 10–15 分", t:"約 25 分", c:"約 NT$20", alt:"打車約 10 分，約 NT$120–150"}},
-        {t:"10:30", k:"transit", n:"回酒店取行李", d:"從迪化街搭捷運或計程車回台北車站一帶。", q:"台北車站",
-          go:{k:"pub", m:"捷運 / 打車", d:"迪化街 → 台北車站", t:"捷運約 25 分，打車約 10 分", c:"打車約 NT$120–150"}},
+        {t:"08:30", k:"food", n:"早餐、退房", d:"5/1 是勞動節，市區和機場人多，預留多一點時間。退房後行李可以先寄放酒店。", q:"台北車站 早餐"},
+        {t:"09:30", k:"sight", n:"台北車站最後補買手信", d:"台北車站地下街、京站有伴手禮店，零食飲料到全聯或便利店補。", h:"店家約 10:00 起", q:"台北車站 伴手禮",
+          go:{k:"walk", m:"步行", d:"酒店 → 台北車站", t:"約 5–10 分"}},
         {t:"11:00", k:"transit", n:"機場捷運 → 桃園 T1", d:"直達車約35–40分鐘，約 NT$160，A1 台北站上車。", q:"桃園國際機場第一航廈"},
         {t:"12:00", k:"transit", n:"到 T1 辦理值機", d:"航班 15:10，值機櫃台約起飛前一小時截止，建議至少提前2小時到。", q:"桃園國際機場第一航廈 馬來西亞航空"},
         {t:"15:10", k:"transit", n:"MH367 桃園 → 吉隆坡", d:"約 20:00 抵達吉隆坡 T1（以出發前時刻為準）。"}
@@ -1504,68 +1552,52 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
   var MAPS = {
     d1:{stops:[
       {n:"桃園機場 T1", q:"桃園國際機場第一航廈", k:"transit"},
-      {n:"台北車站（酒店）", q:"台北車站", k:"transit"},
-      {n:"西門町", q:"西門町 台北", k:"sight"},
-      {n:"寧夏夜市", q:"寧夏夜市 台北", k:"food"}],
-      legs:[["約 37 km","機場捷運約 40 分"],["約 1.3 km","步行約 15 分"],["約 2.2 km","計程車約 10 分"]],
-      links:[{l:"台北車站 → 西門町 → 寧夏夜市",a:1,b:3,m:"transit"}]},
+      {n:"台北車站（酒店）", q:"台北車站", k:"transit"}],
+      legs:[["約 37 km","機場捷運約 40 分"]],
+      links:[{l:"桃園機場 T1 → 台北車站",a:0,b:1,m:"transit"}]},
     d2:{stops:[
-      {n:"台北車站（高鐵）", q:"台北車站", k:"transit"},
-      {n:"台中高鐵站", q:"台灣高鐵台中站", k:"transit"},
-      {n:"彩虹眷村", q:"彩虹眷村 台中", k:"sight"},
-      {n:"第二市場", q:"台中第二市場", k:"food"},
-      {n:"高美溼地", q:"高美濕地", k:"sight"},
-      {n:"逢甲夜市", q:"逢甲夜市 台中", k:"food"},
-      {n:"台中車站（酒店）", q:"台中車站", k:"transit"}],
-      legs:[["約 160 km","高鐵約 1 小時"],["約 7 km","車程約 20 分"],["約 10 km","車程約 25 分"],["約 28 km","車程約 50 分"],["約 22 km","車程約 40 分"],["約 8 km","車程約 20 分"]],
-      links:[{l:"彩虹眷村 → 第二市場 → 高美 → 逢甲 → 酒店",a:2,b:6,m:"driving"}]},
-    d3:{stops:[
-      {n:"台中車站民族路口", q:"台中車站民族路口", k:"transit"},
-      {n:"水社碼頭", q:"水社碼頭 日月潭", k:"sight"},
-      {n:"玄光寺", q:"玄光寺 日月潭", k:"sight"},
-      {n:"伊達邵老街", q:"伊達邵老街 日月潭", k:"food"},
-      {n:"日月潭纜車", q:"日月潭纜車", k:"sight"},
-      {n:"宮原眼科", q:"宮原眼科 台中", k:"food"},
-      {n:"一中街", q:"一中街夜市 台中", k:"food"}],
-      legs:[["約 75 km","巴士約 1.5–2 小時"],["約 1.5 km","船約 10 分"],["約 2.5 km","船約 10 分"],["約 1 km","步行約 15 分"],["約 75 km","巴士約 1.5–2 小時"],["約 1.5 km","步行約 20 分"]],
-      links:[{l:"台中車站 → 水社碼頭（公共交通）",a:0,b:1,m:"transit"},{l:"宮原眼科 → 一中街（步行）",a:5,b:6,m:"walking"}]},
-    d4:{stops:[
-      {n:"台中高鐵站", q:"台灣高鐵台中站", k:"transit"},
+      {n:"阜杭豆漿", q:"阜杭豆漿 台北", k:"food"},
       {n:"台北車站", q:"台北車站", k:"transit"},
-      {n:"花蓮車站", q:"花蓮火車站", k:"transit"},
-      {n:"七星潭", q:"七星潭風景區 花蓮", k:"sight"},
+      {n:"花蓮車站（酒店）", q:"花蓮火車站", k:"transit"},
+      {n:"炸彈蔥油餅", q:"花蓮炸彈蔥油餅", k:"food"},
+      {n:"松園別館", q:"松園別館 花蓮", k:"sight"},
       {n:"東大門夜市", q:"花蓮東大門夜市", k:"food"},
       {n:"公正包子", q:"花蓮公正包子", k:"food"}],
-      legs:[["約 160 km","高鐵約 1 小時"],["約 170 km","台鐵約 2–2.5 小時"],["約 9 km","車程約 20 分"],["約 9 km","車程約 20 分"],["約 1.5 km","步行約 20 分"]],
-      links:[{l:"花蓮車站 → 七星潭 → 東大門 → 公正包子",a:2,b:5,m:"driving"}]},
-    d5:{stops:[
-      {n:"花蓮車站（酒店）", q:"花蓮火車站", k:"transit"},
-      {n:"太魯閣牌樓", q:"太魯閣牌樓", k:"sight"},
-      {n:"砂卡礑步道", q:"砂卡礑步道 花蓮", k:"sight"},
-      {n:"長春祠", q:"長春祠 太魯閣", k:"sight"},
-      {n:"燕子口", q:"燕子口 太魯閣", k:"sight"},
-      {n:"九曲洞", q:"九曲洞 太魯閣", k:"sight"},
-      {n:"天祥", q:"天祥 太魯閣", k:"food"},
-      {n:"液香扁食", q:"花蓮液香扁食", k:"food"}],
-      legs:[["約 22 km","車程約 30 分"],["約 2 km","車程約 5 分"],["約 3 km","車程約 8 分"],["約 5 km","車程約 12 分"],["約 2 km","車程約 5 分"],["約 8 km","車程約 20 分"],["約 42 km","車程約 1 小時"]],
-      links:[{l:"花蓮車站 → 天祥（公路順序）",a:0,b:6,m:"driving"}]},
-    d6:{stops:[
-      {n:"松園別館", q:"松園別館 花蓮", k:"sight"},
+      legs:[["約 1 km","捷運約 10 分"],["約 170 km","台鐵約 2 小時"],["約 2 km","車程約 10 分"],["約 2 km","車程約 10 分"],["約 3 km","車程約 10 分"],["約 1.5 km","步行約 20 分"]],
+      links:[{l:"花蓮車站 → 松園別館 → 東大門夜市",a:2,b:5,m:"driving"}]},
+    d3:{stops:[
+      {n:"花蓮市區（酒店）", q:"花蓮火車站", k:"transit"},
+      {n:"花蓮港（賞鯨）", q:"多羅滿賞鯨 花蓮港", k:"sight"},
+      {n:"液香扁食", q:"花蓮液香扁食", k:"food"},
+      {n:"清水斷崖", q:"清水斷崖 匯德景觀步道", k:"sight"},
+      {n:"七星潭", q:"七星潭風景區 花蓮", k:"sight"},
+      {n:"花蓮市區", q:"花蓮火車站", k:"transit"}],
+      legs:[["約 4 km","車程約 10 分"],["約 4 km","車程約 10 分"],["約 40 km","車程約 50–60 分"],["約 30 km","車程約 40 分"],["約 8 km","車程約 20 分"]],
+      links:[{l:"花蓮港 → 清水斷崖 → 七星潭",a:1,b:4,m:"driving"}]},
+    d4:{stops:[
       {n:"花蓮車站", q:"花蓮火車站", k:"transit"},
-      {n:"台北車站（酒店）", q:"台北車站", k:"transit"},
-      {n:"永康街", q:"永康街 台北", k:"sight"},
-      {n:"鼎泰豐 信義店", q:"鼎泰豐 信義店", k:"food"},
-      {n:"台北101", q:"台北101", k:"sight"}],
-      legs:[["約 3 km","車程約 10 分"],["約 170 km","台鐵約 2–2.5 小時"],["約 3 km","捷運約 15 分"],["約 0.4 km","步行約 5 分"],["約 4 km","捷運約 12 分"]],
-      links:[{l:"永康街 → 鼎泰豐 → 台北101",a:3,b:5,m:"transit"}]},
-    d7:{stops:[
-      {n:"阜杭豆漿", q:"阜杭豆漿 台北", k:"food"},
+      {n:"台北車站（酒店）", q:"台北車站", k:"transit"}],
+      legs:[["約 170 km","台鐵約 2 小時"]],
+      links:[{l:"花蓮車站 → 台北車站",a:0,b:1,m:"transit"}]},
+    d5:{stops:[
       {n:"象山步道", q:"象山步道 台北", k:"sight"},
-      {n:"國立故宮博物院", q:"國立故宮博物院", k:"sight"},
-      {n:"士林夜市", q:"士林夜市", k:"food"}],
-      legs:[["約 6 km","捷運約 25 分"],["約 14 km","計程車約 35 分"],["約 6 km","公車約 25 分"]],
-      links:[{l:"阜杭豆漿 → 象山 → 故宮 → 士林夜市",a:0,b:3,m:"transit"}]},
-    d8:{stops:[
+      {n:"四四南村", q:"四四南村", k:"food"},
+      {n:"台北101", q:"台北101", k:"sight"},
+      {n:"華山1914", q:"華山1914文化創意產業園區", k:"sight"},
+      {n:"西門町", q:"西門町 台北", k:"sight"},
+      {n:"台北車站（酒店）", q:"台北車站", k:"transit"}],
+      legs:[["約 1 km","步行約 15 分"],["約 0.6 km","步行約 10 分"],["約 6 km","捷運約 25 分"],["約 3 km","捷運約 10 分"],["約 1.5 km","捷運約 5 分"]],
+      links:[{l:"象山 → 四四南村 → 台北101（步行）",a:0,b:2,m:"walking"},{l:"華山1914 → 西門町",a:3,b:4,m:"transit"}]},
+    d6:{stops:[
+      {n:"台北車站（酒店）", q:"台北車站", k:"transit"},
+      {n:"中山・赤峰街", q:"赤峰街 中山站", k:"sight"},
+      {n:"淡水紅毛城", q:"淡水紅毛城", k:"sight"},
+      {n:"淡水老街", q:"淡水老街", k:"sight"},
+      {n:"漁人碼頭", q:"淡水漁人碼頭 情人橋", k:"sight"},
+      {n:"台北車站（酒店）", q:"台北車站", k:"transit"}],
+      legs:[["約 1.5 km","捷運約 5 分"],["約 25 km","捷運 + 公車約 50 分"],["約 1 km","步行約 15 分"],["約 3 km","公車或渡輪約 15 分"],["約 27 km","公車 + 捷運約 1 小時"]],
+      links:[{l:"中山站 → 淡水紅毛城",a:1,b:2,m:"transit"},{l:"紅毛城 → 淡水老街 → 漁人碼頭",a:2,b:4,m:"transit"}]},
+    d7:{stops:[
       {n:"台北車站（酒店）", q:"台北車站", k:"transit"},
       {n:"瑞芳車站", q:"瑞芳車站", k:"transit"},
       {n:"九份老街", q:"九份老街", k:"sight"},
@@ -1574,22 +1606,28 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       {n:"台北車站（酒店）", q:"台北車站", k:"transit"}],
       legs:[["約 32 km","台鐵約 45 分"],["約 6 km","公車約 20 分"],["約 17 km","車程約 35 分"],["約 55 km","台鐵+捷運約 2 小時"],["約 12 km","捷運約 35 分"]],
       links:[{l:"台北車站 → 瑞芳 → 九份（公共交通）",a:0,b:2,m:"transit"},{l:"新北投站 → 台北車站",a:4,b:5,m:"transit"}]},
+    d8:{stops:[
+      {n:"台北車站（酒店）", q:"台北車站", k:"transit"},
+      {n:"永樂市場", q:"永樂市場 台北", k:"food"},
+      {n:"迪化街南段", q:"迪化街 南段 大稻埕", k:"sight"},
+      {n:"賣麵炎仔", q:"賣麵炎仔 大稻埕", k:"food"},
+      {n:"台北車站（酒店）", q:"台北車站", k:"transit"},
+      {n:"寧夏夜市", q:"寧夏夜市 台北", k:"food"}],
+      legs:[["約 2 km","捷運 + 步行約 15 分"],["約 0.3 km","步行約 5 分"],["約 0.8 km","步行約 10 分"],["約 2 km","捷運約 20 分"],["約 2 km","捷運約 10 分"]],
+      links:[{l:"永樂市場 → 迪化街 → 賣麵炎仔（步行）",a:1,b:3,m:"walking"},{l:"台北車站 → 寧夏夜市",a:4,b:5,m:"transit"}]},
     d9:{stops:[
       {n:"台北車站（酒店）", q:"台北車站", k:"transit"},
-      {n:"迪化街", q:"迪化街 台北", k:"sight"},
-      {n:"台北車站（取行李）", q:"台北車站", k:"transit"},
       {n:"桃園機場 T1", q:"桃園國際機場第一航廈", k:"transit"}],
-      legs:[["約 2 km","計程車約 10 分"],["約 2 km","計程車約 10 分"],["約 37 km","機場捷運約 40 分"]],
-      links:[{l:"台北車站 → 桃園機場 T1",a:2,b:3,m:"transit"}]}
+      legs:[["約 37 km","機場捷運約 40 分"]],
+      links:[{l:"台北車站 → 桃園機場 T1",a:0,b:1,m:"transit"}]}
   };
-
   function dirUrl(stops,a,b,mode){
     var o=stops[a].q, d=stops[b].q;
     var w=stops.slice(a+1,b).map(function(x){return x.q;}).join("|");
     return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(o)+"&destination="+encodeURIComponent(d)+(w?"&waypoints="+encodeURIComponent(w):"")+"&travelmode="+mode;
   }
   function mapHtml(d){
-    var m = MAPS[d.id]; if(!m) return "";
+    var m = MAPS[d.cid || d.id]; if(!m) return "";
     var links = '<div class="mlinks">';
     m.links.forEach(function(l){
       links += '<a class="map" target="_blank" rel="noopener" href="'+dirUrl(m.stops,l.a,l.b,l.m)+'">在 Google 地圖開啟：'+esc(l.l)+'</a>';
@@ -1612,22 +1650,19 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
 
 
   var BUYS = {
-    d1:[{n:"藥妝、面膜", note:"逛西門町時順路買，先和馬來西亞的價格比一比再決定。", w:[["康是美（西門町）","康是美 西門町"],["屈臣氏（西門町）","屈臣氏 西門町"]]}],
-    d3:[
-      {n:"日月潭紅茶", note:"逛伊達邵老街時買，香氣偏甜，冷泡熱泡都好喝。", w:[["伊達邵老街","伊達邵老街 日月潭"],["水社碼頭周邊","水社碼頭 日月潭"]]},
-      {n:"鳳梨酥", note:"晚上逛宮原眼科時買，放手提行李，別壓碎。", w:[["宮原眼科","宮原眼科 台中"]]},
-      {n:"太陽餅", note:"宮原眼科和一中街之間的手信店可以買。", w:[["太陽堂","太陽堂 台中"],["台中車站周邊手信店","台中車站 伴手禮"]]},
-      {n:"牛軋糖、牛軋餅", note:"想買的話，去台中的糖村門店。", w:[["糖村（台中）","糖村 台中"]]}
+    d1:[{n:"藥妝、面膜", note:"台北車站附近就有，先和馬來西亞的價格比一比再決定，之後幾天在台北也能補買。", w:[["康是美（台北車站）","康是美 台北車站"],["屈臣氏（台北車站）","屈臣氏 台北車站"]]}],
+    d3:[{n:"曾記麻糬", note:"今天只當嚐鮮。保存期短，後面還有 6 天行程，不適合買來帶回家。", w:[["曾記麻糬（花蓮）","花蓮曾記麻糬"]]}],
+    d5:[
+      {n:"鳳梨酥、牛軋糖", note:"這天時間鬆，順路去台北的名店買，放手提行李別壓碎。", w:[["微熱山丘","微熱山丘 台北"],["佳德糕餅","佳德糕餅 台北"],["犁記","犁記 台北"],["糖村（台北）","糖村 台北"]]}
     ],
-    d5:[{n:"曾記麻糬", note:"今天只當嚐鮮，儲存期短。要帶回去的份量，4/28 離開花蓮前再買。", w:[["曾記麻糬（花蓮）","花蓮曾記麻糬"]]}],
-    d6:[{n:"曾記麻糬", note:"13:30 上火車前買小份，儘早吃完，不適合當遠端禮物。", w:[["曾記麻糬（花蓮）","花蓮曾記麻糬"]]}],
-    d8:[{n:"黑糖、薑母茶", note:"九份老街的小店有，也可以留到 5/1 在迪化街買。", w:[["九份老街手信店","九份老街"]]}],
-    d9:[
-      {n:"高山茶、烏龍茶", note:"09:00 逛迪化街時買，請店家推薦試喝，選真空小包裝方便帶。", w:[["迪化街茶行","迪化街 茶行"],["林華泰茶行","林華泰茶行 迪化街"]]},
+    d7:[{n:"黑糖、薑母茶", note:"九份老街的小店有，也可以留到 4/30 在迪化街買。", w:[["九份老街手信店","九份老街"]]}],
+    d8:[
+      {n:"高山茶、烏龍茶", note:"逛迪化街時買，請店家推薦試喝，選真空小包裝方便帶。", w:[["迪化街茶行","迪化街 茶行"],["林華泰茶行","林華泰茶行 迪化街"]]},
       {n:"乾貨、蜜餞", note:"香菇、乾果、蜜餞，肉製品跳過。", w:[["迪化街乾貨","迪化街 乾貨"],["永樂市場","永樂市場 台北"]]},
-      {n:"黑糖、薑母茶", note:"分量足、重量輕，和茶葉一起買。", w:[["迪化街黑糖","迪化街 黑糖"]]},
-      {n:"零食、餅乾、飲料", note:"回酒店取行李前後到全聯或便利店補貨，泡麵避開牛肉口味。", w:[["全聯福利中心","全聯福利中心 台北車站"],["便利商店","7-ELEVEN 台北車站"]]},
-      {n:"鳳梨酥、牛軋糖（台北備選）", note:"4/25 在台中沒買到的話，在台北補。", w:[["微熱山丘","微熱山丘 台北"],["佳德糕餅","佳德糕餅 台北"],["犁記","犁記 台北"],["糖村（台北）","糖村 台北"]]}
+      {n:"黑糖、薑母茶", note:"分量足、重量輕，和茶葉一起買。", w:[["迪化街黑糖","迪化街 黑糖"]]}
+    ],
+    d9:[
+      {n:"零食、餅乾、飲料", note:"退房前到全聯或便利店補貨，泡麵避開牛肉口味。", w:[["全聯福利中心","全聯福利中心 台北車站"],["便利商店","7-ELEVEN 台北車站"]]}
     ]
   };
   function buyHtml(d){
@@ -1641,11 +1676,14 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
   }
 
   var KIND = {transit:"交通", sight:"景點", food:"美食"};
+  var COLORS = {coral:["#F2A497","珊瑚"], yellow:["#F6D27A","山吹"], mizu:["#A8D3E6","水色"], green:["#B9DAA5","若竹"],
+                purple:["#C9B8E8","藤紫"], pink:["#F5C2D2","櫻"], mint:["#A6DCCB","薄荷"], apricot:["#F5C49C","杏"]};
+  try { localStorage.removeItem("tw2027-kindcolors"); } catch(e){} // the type-colour setting was removed; per-card colours stay
   // Highlights marked 必去 (one or two per day)
   var MUST = {
-    d1:["寧夏夜市"], d2:["高美溼地看日落","逢甲夜市"], d3:["水社碼頭搭船遊湖","日月潭纜車"], d4:["七星潭"],
-    d5:["砂卡礑步道","燕子口"], d6:["鼎泰豐 信義店","台北101 夜景"], d7:["象山步道","國立故宮博物院"],
-    d8:["九份老街","十分老街放天燈"], d9:["迪化街買手信"]
+    d1:[], d2:["松園別館"], d3:["多羅滿海洋賞鯨導覽體驗","清水斷崖"], d4:[],
+    d5:["象山步道","西門町逛街"], d6:["淡水紅毛城","淡水漁人碼頭看日落"], d7:["九份老街","十分老街放天燈"],
+    d8:["迪化街南段","寧夏夜市"], d9:[]
   };
   // Name the vehicle on transport cards so the colored tag says how you get there
   function vehicle(n){
@@ -1661,21 +1699,21 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
   var CHECK = [
     {t:"填寫台灣線上入境卡（TWAC）：免費，只在官網填，有網站要收費的是騙局。需要護照資料、郵箱、航班、住宿地址，也要有離境機票。可在抵達前幾天內提交（3 天或 7 天，規定有過調整，以官網為準），並確認護照有效期和入境規定。",
      l:[["台灣入境卡 TWAC（官網）","https://twac.immigration.gov.tw/"],["台灣外交部領事事務局","https://www.boca.gov.tw/"]]},
-    {t:"訂住宿：台北 4/23、台中 4/24–4/26、花蓮 4/26–4/28、台北 4/28–5/1（連住3晚）。先訂可免費取消的方案。",
+    {t:"訂住宿：台北 4/23、花蓮 4/24–4/26、台北 4/26–5/1（連住5晚）。先訂可免費取消的方案。",
      l:[["Booking.com","https://www.booking.com/"],["Agoda","https://www.agoda.com/"],["Trip.com","https://www.trip.com/"]]},
-    {t:"訂高鐵：4/24 台北 → 台中，4/26 台中 → 台北。高鐵最多提前 28 天訂：4/24（週六）的票 3/26（週五）起訂，4/26 的票 3/29（週一）起訂。訂好後可用 T-EX 行動購票 App 取票。",
-     l:[["高鐵網路訂票","https://irs.thsrc.com.tw/IMINT/"],["高鐵官網","https://www.thsrc.com.tw/"]]},
-    {t:"安排高美溼地往返車（4/24）：去程可搭 309 公車，回程和去逢甲夜市建議先訂車。",
-     l:[["台中觀光公車 309 高美線","https://travel.taichung.gov.tw/taichung-tour-bus/zh-tw/route/309"]]},
-    {t:"4/24 也查高美溼地當天的潮汐和日落時間。",
+    {t:"買悠遊卡並加值：捷運、公車、台鐵區間車、便利店都能用（這次不搭高鐵，不用訂高鐵票）。",
+     l:[["悠遊卡官網","https://www.easycard.com.tw/"],["台北捷運","https://www.metro.taipei/"]]},
+    {t:"4/28 淡水看日落：出發前查當天日落時間（約 18:20）和天氣，下雨就改逛老街咖啡店。",
      l:[["中央氣象署","https://www.cwa.gov.tw/"]]},
-    {t:"安排日月潭交通（4/25）：台灣好行日月潭線，先查班次和預約方式，也可包車。",
-     l:[["日月潭線路線","https://www.taiwantrip.com.tw/Frontend/Route/Select_p?RouteID=R0005"],["日月潭線時刻表","https://www.taiwantrip.com.tw/Frontend/Bustime/TimeTable/R0005"]]},
-    {t:"訂花蓮火車票：4/26 台北 → 花蓮，4/28 花蓮 → 台北。台鐵在乘車前 28 天開放訂票：4/26 的車 3/29（週一）起訂，4/28 的車 3/31（週三）起訂。外籍旅客訂票填護照號碼，付款後取票要帶護照和訂票代號。遇連假開放時間可能調整，以官網公告為準。",
+    {t:"4/29 九份十分當天看天氣，下雨或風大時天燈可能暫停。",
+     l:[["中央氣象署","https://www.cwa.gov.tw/"]]},
+    {t:"預約多羅滿海洋賞鯨（4/25）：4–10 月是賞鯨季，海況不好會取消或改期，訂之前看清楚退改規則，也可加購酒店接送。",
+     l:[["Klook：多羅滿賞鯨","https://www.klook.com/activity/697-hualien-whale-watching-rafting-hualien/"],["地圖：多羅滿賞鯨（花蓮港）","https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("多羅滿賞鯨 花蓮港")]]},
+    {t:"訂花蓮火車票：4/24 台北 → 花蓮，4/26 花蓮 → 台北。台鐵在乘車前 28 天開放訂票：4/24（週六）的車 3/27（週六）起訂，4/26 的車 3/29（週一）起訂。外籍旅客訂票填護照號碼，付款後取票要帶護照和訂票代號。遇連假開放時間可能調整，以官網公告為準。",
      l:[["台鐵訂票","https://www.railway.gov.tw/tra-tip-web/tip"]]},
-    {t:"預約太魯閣包車或一日遊（4/27），並在出發前看國家公園的路況公告。",
-     l:[["太魯閣國家公園（路況公告）","https://www.taroko.gov.tw/"],["Klook","https://www.klook.com/"],["KKday","https://www.kkday.com/"]]},
-    {t:"預約新北投湯屋（4/30 晚上）：在地圖上搜湯屋，看電話或官網訂位。",
+    {t:"安排 4/25 清水斷崖、七星潭的交通：跟團有包含就不用另外訂，沒有的話先約好半天包車或叫車，出發前看蘇花公路路況。",
+     l:[["Klook","https://www.klook.com/"],["KKday","https://www.kkday.com/"],["公路局路況","https://www.thb.gov.tw/"]]},
+    {t:"預約新北投湯屋（4/29 晚上）：在地圖上搜湯屋，看電話或官網訂位。",
      l:[["地圖搜尋：新北投湯屋","https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("新北投 湯屋")]]}
   ];
 
@@ -1688,14 +1726,14 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
     "手機、充電線、行動電源、轉接頭（台灣是110V雙腳扁插，跟馬來西亞插座不同）",
     "eSIM 或實體 SIM 卡（出發前先裝好，或抵達機場再買）",
     "薄外套或防風外套（早晚溫差、山區偏涼）",
-    "雨具：輕便雨傘或雨衣（4月底常有陣雨，太魯閣山區更明顯）",
-    "好走防滑的鞋（九份石階、太魯閣步道、市區走路多）",
+    "雨具：輕便雨傘或雨衣（4月底常有陣雨，海邊和山區風雨更明顯）",
+    "好走防滑的鞋（九份石階、高美木棧道、市區走路多）",
     "防曬乳、太陽眼鏡、帽子（白天紫外線強）",
-    "常備藥（腸胃藥、感冒藥、暈車藥）和個人慢性藥物",
+    "常備藥（腸胃藥、感冒藥、暈車暈船藥，4/25 要出海賞鯨）和個人慢性藥物",
     "盥洗用品、隱形眼鏡藥水等個人習慣用品（飯店通常有基本備品，不放心可自己帶）",
     "環保餐具或水壺（想少用一次性用品時）",
     "收納袋或折疊袋，裝路上買的伴手禮",
-    "一件比較正式的衣服（鼎泰豐、餐廳用餐或拍照可備用，非必要）"
+    "一件比較正式的衣服（餐廳用餐或拍照可備用，非必要）"
   ];
 
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
@@ -1706,23 +1744,73 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
   var dayHtml = "";
 
   // ---- Editable itinerary: built-in plan + per-viewer edits saved in the browser ----
-  var ITIN_KEY = "tw2027-itin-v1", itinSaved = {};
+  // v2: the day order changed (Hualien before Taichung), so v1 edits keyed by day are not reused
+  var ITIN_KEY = "tw2027-itin-v2", itinSaved = {};
   try { itinSaved = JSON.parse(localStorage.getItem(ITIN_KEY) || "{}") || {}; } catch(e){ itinSaved = {}; }
   var ITIN_DEFAULT = {};
   DAYS.forEach(function(d){
+    d.cid = d.id;
     d.items.forEach(function(it){ it.must = (MUST[d.id]||[]).indexOf(it.n) >= 0; });
-    ITIN_DEFAULT[d.id] = JSON.stringify(d.items);
-    if(Array.isArray(itinSaved[d.id])) d.items = itinSaved[d.id];
+    d.tips = (d.tips || []).slice();
+    d.buys = JSON.parse(JSON.stringify(BUYS[d.id] || []));
+    ITIN_DEFAULT[d.id] = JSON.stringify({items:d.items, tips:d.tips, buys:d.buys});
+    var sv = itinSaved[d.id] || {};
+    ["items","tips","buys"].forEach(function(k){ if(Array.isArray(sv[k])) d[k] = sv[k]; });
   });
-  function itinSave(d){
-    itinSaved[d.id] = d.items;
+  // Day order: which plan (cid) sits on which date. Dates, weekday and that night's stay stay with the date.
+  var ORDER_KEY = "tw2027-dayorder", CONTENT_FIELDS = ["cid","title","route","weather","items","tips","buys"];
+  function takeContent(d){ var c = {}; CONTENT_FIELDS.forEach(function(f){ c[f] = d[f]; }); return c; }
+  function putContent(d, c){ CONTENT_FIELDS.forEach(function(f){ d[f] = c[f]; }); }
+  (function(){
+    var order = null;
+    try { order = JSON.parse(localStorage.getItem(ORDER_KEY) || "null"); } catch(e){}
+    var ids = DAYS.map(function(d){ return d.id; });
+    if(!Array.isArray(order) || order.length !== ids.length || order.slice().sort().join() !== ids.slice().sort().join()) return;
+    var byCid = {}; DAYS.forEach(function(d){ byCid[d.cid] = takeContent(d); });
+    DAYS.forEach(function(d, i){ putContent(d, byCid[order[i]]); });
+  })();
+  function saveOrder(){
+    var order = DAYS.map(function(d){ return d.cid; }), custom = order.some(function(c, i){ return c !== DAYS[i].id; });
+    try { if(custom) localStorage.setItem(ORDER_KEY, JSON.stringify(order)); else localStorage.removeItem(ORDER_KEY); } catch(e){}
+  }
+  function orderCustom(){ return DAYS.some(function(d){ return d.cid !== d.id; }); }
+  function swapDays(a, b){ var ca = takeContent(a), cb = takeContent(b); putContent(a, cb); putContent(b, ca); saveOrder(); }
+  function itinSave(d, part){
+    itinSaved[d.cid] = itinSaved[d.cid] || {};
+    itinSaved[d.cid][part || "items"] = d[part || "items"];
     try { localStorage.setItem(ITIN_KEY, JSON.stringify(itinSaved)); } catch(e){}
   }
-  function itinModified(d){ return Array.isArray(itinSaved[d.id]); }
+  function itinModified(d){ return !!(itinSaved[d.cid] && itinSaved[d.cid].items); }
+  function itinAnyModified(d){ return !!itinSaved[d.cid] && Object.keys(itinSaved[d.cid]).length > 0; }
+  function buyBox(d, ed){
+    var list = d.buys || [];
+    if(!list.length && !ed) return "";
+    var h = '<div class="buybox"><b>這天順路買手信</b>';
+    list.forEach(function(x, i){
+      var w = (x.w && x.w.length) ? x.w : [[x.n, x.n]];
+      var links = w.map(function(v){ return '<a target="_blank" rel="noopener" href="'+mapUrl(v[1])+'">'+esc(v[0])+'</a>'; }).join("");
+      h += '<div class="buyrow">' + (ed ? '<button type="button" class="rowdel" data-act="bdel" data-i="'+i+'" aria-label="刪除 '+esc(x.n)+'">×</button>' : '') +
+           '<span class="bn">'+esc(x.n)+'</span>' + (x.note ? '　'+esc(x.note) : '') + '<div class="wchips">'+links+'</div></div>';
+    });
+    if(!list.length) h += '<p class="itnote" style="margin:4px 0 0">還沒有手信清單。</p>';
+    if(ed) h += '<div class="rowadd"><input data-f="bn" maxlength="40" placeholder="想買什麼，例如：鳳梨酥" aria-label="手信名稱"><input data-f="bnote" maxlength="120" placeholder="在哪買、備註（選填）" aria-label="手信備註"><button type="button" data-act="badd">加入</button></div>';
+    return h + '</div>';
+  }
+  function tipsBox(d, ed){
+    var list = d.tips || [];
+    if(!list.length && !ed) return "";
+    var h = '<div class="tips"><b>小提醒</b>' + (list.length ? '<ul>' + list.map(function(x, i){
+      return '<li>' + esc(x) + (ed ? ' <button type="button" class="rowdel" data-act="tdel" data-i="'+i+'" aria-label="刪除這條提醒">×</button>' : '') + '</li>';
+    }).join("") + '</ul>' : '<p class="itnote" style="margin:4px 0 0">還沒有提醒。</p>');
+    if(ed) h += '<div class="rowadd one"><input data-f="tip" maxlength="160" placeholder="新增一條提醒" aria-label="新增提醒"><button type="button" data-act="tadd">加入</button></div>';
+    return h + '</div>';
+  }
   function sortItems(d){ d.items.sort(function(a,b){ return (a.t||"99:99") < (b.t||"99:99") ? -1 : (a.t||"99:99") > (b.t||"99:99") ? 1 : 0; }); }
   var editingDay = null;
   var MODE_NAME = {pub:"公共交通", walk:"步行", taxi:"打車"};
 
+  function safeUrl(u){ return (typeof u === "string" && /^https?:\/\//i.test(u)) ? u : ""; }
+  function hostOf(u){ try { return new URL(u).hostname.replace(/^www\./, ""); } catch(e){ return "連結"; } }
   function dayInner(d){
     var ed = editingDay === d.id;
     var items = d.items.map(function(it, idx){
@@ -1735,32 +1823,46 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       }
       var meta = "";
       var q = it.q || it.n;
-      if(it.h || q){
+      var link = safeUrl(it.u);
+      if(it.h || q || link){
         meta = '<div class="meta">' +
           (it.h ? '<span class="hours">'+esc(it.h)+'</span>' : '') +
+          (link ? '<a class="map linkchip" target="_blank" rel="noopener noreferrer" href="'+esc(link)+'" aria-label="開啟連結：'+esc(hostOf(link))+'">🔗 '+esc(hostOf(link))+'</a>' : '') +
           (q ? '<a class="map" target="_blank" rel="noopener" href="'+mapUrl(q)+'" aria-label="在 Google 地圖開啟 '+esc(it.n)+'">地圖</a>' : '') +
         '</div>';
       }
-      var ctl = ed ? '<div class="itctl"><button type="button" data-act="edit" data-i="'+idx+'">✎ 修改</button><button type="button" class="del" data-act="del" data-i="'+idx+'">刪除</button></div>' : '';
+      var ctl = ed ? '<div class="itctl"><button type="button" data-act="edit" data-i="'+idx+'">✎ 修改</button><button type="button" class="del" data-act="del" data-i="'+idx+'">刪除</button>' +
+        '<span class="itorder"><button type="button" class="ord" data-act="up" data-i="'+idx+'"'+(idx === 0 ? ' disabled' : '')+' aria-label="往前移（換到前一項的時間）">▲</button>' +
+        '<button type="button" class="ord" data-act="down" data-i="'+idx+'"'+(idx === d.items.length - 1 ? ' disabled' : '')+' aria-label="往後移（換到後一項的時間）">▼</button></span></div>' : '';
       var k = KIND[it.k] ? it.k : "sight";
       return leg + '<li class="item"><div class="time">'+esc(it.t||"")+'</div>' +
-        '<div class="card '+k+(it.must?' must':'')+(ed?' editable':'')+'"'+(ed?' data-act="edit" data-i="'+idx+'"':'')+'><h3>'+(it.must?'<span class="musttag">★ 必去</span>':'')+'<span class="tag">'+(k==="transit"?vehicle(it.n):KIND[k])+'</span>'+esc(it.n)+'</h3>' +
+        '<div class="card '+k+(it.must?' must':'')+(ed?' editable':'')+'"'+(COLORS[it.c] ? ' style="--kc:'+COLORS[it.c][0]+'"' : '')+(ed?' data-act="edit" data-i="'+idx+'"':'')+'><h3>'+(it.must?'<span class="musttag">★ 必去</span>':'')+'<span class="tag">'+(k==="transit"?vehicle(it.n):KIND[k])+'</span>'+esc(it.n)+'</h3>' +
         (it.d ? '<p>'+esc(it.d)+'</p>' : '') + meta + ctl + '</div></li>';
     }).join("");
     if(!d.items.length) items = '<li class="itempty box">這天還沒有行程，按下面的「＋ 新增行程」加入。</li>';
-    var tips = d.tips && d.tips.length ? '<div class="tips"><b>小提醒</b><ul>'+d.tips.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>' : '';
+    var idx = DAYS.indexOf(d);
+    var mover = ed
+      ? '<div class="itmove"><span class="itmove-lb">移動這天的行程</span>' +
+          '<button type="button" data-act="mvprev"'+(idx <= 0 ? ' disabled' : '')+'>◀ 提前一天</button>' +
+          '<button type="button" data-act="mvnext"'+(idx >= DAYS.length - 1 ? ' disabled' : '')+'>延後一天 ▶</button>' +
+          '<label class="itswap">或和<select data-act="mvswap" aria-label="選擇要對調的日期"><option value="">選日期</option>' +
+          DAYS.map(function(o, j){ return j === idx ? '' : '<option value="'+j+'">'+o.date+' '+o.wk+'｜'+esc(o.title)+'</option>'; }).join("") +
+          '</select>對調</label>' +
+          (orderCustom() ? '<button type="button" class="itreset" data-act="mvreset">恢復原本的天數順序</button>' : '') +
+          '<p class="itnote" style="margin:6px 0 0">只換行程內容；日期和當晚住哪不會跟著移動，記得到「機酒」頁確認住宿。</p></div>'
+      : '';
     var tools = ed
       ? '<div class="ittools"><button type="button" class="itadd" data-act="add">＋ 新增行程</button>' +
-        (itinModified(d) ? '<button type="button" class="itreset" data-act="reset">恢復這天的預設行程</button>' : '') + '</div>'
+        (itinAnyModified(d) ? '<button type="button" class="itreset" data-act="reset">恢復這天的預設行程</button>' : '') + '</div>'
       : '';
-    var modNote = itinModified(d) && !ed ? '<p class="itnote">這天的行程已自行修改（只存在這台裝置）。</p>' : '';
-    return '<div class="dayhero"><span class="pico" data-icon="'+(DAYICON[d.id]||"train")+'"></span><div>' +
+    var modNote = itinAnyModified(d) && !ed ? '<p class="itnote">這天的行程已自行修改（只存在這台裝置）。</p>' : '';
+    return '<div class="dayhero"><span class="pico" data-icon="'+(DAYICON[d.cid]||"train")+'"></span><div>' +
       '<h2>'+d.date+' '+d.wk+'｜'+esc(d.title)+'</h2>' +
       '<p class="sub">'+esc(d.route)+'</p></div></div>' +
       '<div class="dayhead"><span class="pill">'+esc(d.weather)+'</span>' +
       '<span class="pill stay"><a target="_blank" rel="noopener" href="'+mapUrl(d.stay.q)+'">'+(d.id==="d9"?"":"住 ")+esc(d.stay.name)+'</a></span>' +
-      '<button type="button" class="itedit'+(ed?' on':'')+'" data-act="toggle">'+(ed?'✓ 完成編輯':'✎ 編輯行程')+'</button></div>' +
-      (itinModified(d) ? '' : mapHtml(d)) + modNote + '<ol class="tl">'+items+'</ol>' + tools + buyHtml(d) + tips;
+      '<button type="button" class="itedit'+(ed?' on':'')+'" data-act="toggle">'+(ed?'✓ 完成編輯':'✎ 編輯行程')+'</button></div>' + mover +
+      (itinModified(d) ? '' : mapHtml(d)) + modNote + '<ol class="tl">'+items+'</ol>' + tools + buyBox(d, ed) + tipsBox(d, ed);
   }
   function renderDay(d){
     var sec = document.getElementById(d.id); if(!sec) return;
@@ -1784,15 +1886,25 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
     function chipSet(boxId, val){ Array.prototype.forEach.call($(boxId).children, function(b){ b.classList.toggle("on", b.getAttribute("data-v") === val); }); }
     Array.prototype.forEach.call($("itK").children, function(b){ b.addEventListener("click", function(){ kind = b.getAttribute("data-v"); chipSet("itK", kind); }); });
     Array.prototype.forEach.call($("itGoK").children, function(b){ b.addEventListener("click", function(){ goK = b.getAttribute("data-v"); chipSet("itGoK", goK); $("itGoBox").hidden = !goK; }); });
-    var lastFocus = null;
+    var lastFocus = null, color = "";
+    // colour chips: "跟著類型" + palette
+    (function(){
+      var box = $("itC");
+      var h = '<button type="button" data-v="" class="auto">跟著類型</button>';
+      Object.keys(COLORS).forEach(function(c){ h += '<button type="button" data-v="'+c+'" style="--sw:'+COLORS[c][0]+'"><i></i>'+COLORS[c][1]+'</button>'; });
+      box.innerHTML = h;
+      Array.prototype.forEach.call(box.children, function(b){ b.addEventListener("click", function(){ color = b.getAttribute("data-v"); chipSet("itC", color); }); });
+    })();
     function open(d, idx){
       cur = {d:d, idx:idx};
+      $("itDay").innerHTML = DAYS.map(function(o, j){ return '<option value="'+j+'"'+(o === d ? ' selected' : '')+'>'+o.date+' '+o.wk+'｜'+esc(o.title)+'</option>'; }).join("");
       var it = idx >= 0 ? d.items[idx] : {t:"", k:"sight", n:"", d:"", h:"", q:"", must:false};
       $("itSheetTitle").textContent = idx >= 0 ? "修改行程" : "新增行程";
       $("itSheetDay").textContent = d.date + " " + d.wk + "｜" + d.title;
       $("itT").value = it.t || ""; $("itN").value = it.n || ""; $("itD").value = it.d || "";
-      $("itH").value = it.h || ""; $("itQ").value = it.q || ""; $("itMust").checked = !!it.must;
+      $("itH").value = it.h || ""; $("itQ").value = it.q || ""; $("itMust").checked = !!it.must; $("itU").value = it.u || "";
       kind = KIND[it.k] ? it.k : "sight"; chipSet("itK", kind);
+      color = COLORS[it.c] ? it.c : ""; chipSet("itC", color);
       var g = it.go || {};
       goK = (g.d || g.m) ? (g.k || "pub") : ""; chipSet("itGoK", goK); $("itGoBox").hidden = !goK;
       $("itGoM").value = g.m || ""; $("itGoD").value = g.d || ""; $("itGoT").value = g.t || ""; $("itGoC").value = g.c || "";
@@ -1817,14 +1929,37 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       it.t = $("itT").value; it.k = kind; it.n = n; it.d = $("itD").value.trim();
       it.h = $("itH").value.trim(); it.q = $("itQ").value.trim(); it.must = $("itMust").checked;
       if(!it.h) delete it.h; if(!it.q) delete it.q;
+      var u = $("itU").value.trim();
+      if(u){
+        if(!/^[a-z][a-z0-9+.-]*:/i.test(u)) u = "https://" + u;
+        if(!/^https?:\/\/[^\s]+\.[^\s]+/i.test(u)){ $("itErr").textContent = "連結格式不對，請貼上完整網址，例如 https://www.klook.com/…"; $("itU").focus(); return; }
+        it.u = u;
+      } else delete it.u;
       if(goK){
         var og = old.go || {};
         it.go = {k:goK, m:$("itGoM").value.trim() || MODE_NAME[goK], d:$("itGoD").value.trim(), t:$("itGoT").value.trim(), c:$("itGoC").value.trim()};
         if(og.alt && og.k === goK) it.go.alt = og.alt;
         ["t","c"].forEach(function(f){ if(!it.go[f]) delete it.go[f]; });
       } else delete it.go;
-      if(cur.idx >= 0) d.items[cur.idx] = it; else d.items.push(it);
-      sortItems(d); itinSave(d); close(); renderDay(d);
+      if(color) it.c = color; else delete it.c;
+      var target = DAYS[+$("itDay").value] || d;
+      if(target === d){
+        if(cur.idx >= 0) d.items[cur.idx] = it; else d.items.push(it);
+        sortItems(d); itinSave(d); close(); renderDay(d);
+      } else {
+        // move the item to another date (it keeps its time and gets sorted in there)
+        if(cur.idx >= 0){ d.items.splice(cur.idx, 1); itinSave(d); }
+        target.items.push(it); sortItems(target); itinSave(target);
+        close();
+        editingDay = target.id;
+        renderDay(d); renderDay(target);
+        if(typeof showDay === "function") showDay(target.id, true);
+        var nm = it.n;
+        setTimeout(function(){
+          var cards = document.querySelectorAll('#'+target.id+' .card');
+          Array.prototype.forEach.call(cards, function(c){ var h = c.querySelector("h3"); if(h && h.textContent.indexOf(nm) >= 0){ c.classList.add("justmoved"); try { c.scrollIntoView({block:"center", behavior:"smooth"}); } catch(e){} } });
+        }, 60);
+      }
     }
     $("itSave").addEventListener("click", save);
     $("itCancel").addEventListener("click", close);
@@ -1836,12 +1971,79 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       var d = cur.d; d.items.splice(cur.idx, 1); itinSave(d); close(); renderDay(d);
     });
 
+    // swap two dates' plans, then follow the moved plan to its new date (still in edit mode)
+    function moveTo(from, to){
+      swapDays(from, to);
+      editingDay = to.id;
+      renderDay(from); renderDay(to);
+      if(typeof showDay === "function") showDay(to.id, true);
+    }
+    days.addEventListener("change", function(ev){
+      var sel = ev.target.closest('select[data-act="mvswap"]'); if(!sel || sel.value === "") return;
+      var sec = sel.closest("section[id]"); var d = DAYS[dayIndex(sec.id)];
+      moveTo(d, DAYS[+sel.value]);
+    });
     days.addEventListener("click", function(ev){
+      if(ev.target.closest("select")) return;
       var el = ev.target.closest("[data-act]"); if(!el || !days.contains(el)) return;
       if(ev.target.closest("a")) return; // let map links open normally
       var sec = el.closest("section[id]"); if(!sec) return;
       var d = DAYS[dayIndex(sec.id)], act = el.getAttribute("data-act");
       if(act === "toggle"){ editingDay = editingDay === d.id ? null : d.id; renderDay(d); }
+      else if(act === "up" || act === "down"){
+        // swap with the neighbour and trade time slots, so the day stays in time order
+        ev.stopPropagation();
+        var i1 = +el.getAttribute("data-i"), j1 = act === "up" ? i1 - 1 : i1 + 1;
+        if(j1 < 0 || j1 >= d.items.length) return;
+        var A = d.items[i1], B = d.items[j1], tA = A.t, tB = B.t;
+        A.t = tB; B.t = tA; d.items[i1] = B; d.items[j1] = A;
+        itinSave(d); renderDay(d);
+        var moved = document.querySelector('#'+d.id+' [data-act="'+act+'"][data-i="'+j1+'"]');
+        var card = moved && moved.closest(".card");
+        if(card){
+          card.classList.add("justmoved");
+          try { card.scrollIntoView({block:"center", behavior:"smooth"}); } catch(e){}
+          if(!moved.disabled) moved.focus({preventScroll:true});
+        }
+      }
+      else if(act === "mvprev" || act === "mvnext"){
+        var i0 = DAYS.indexOf(d), j0 = act === "mvprev" ? i0 - 1 : i0 + 1;
+        if(j0 < 0 || j0 >= DAYS.length) return;
+        moveTo(d, DAYS[j0]);
+      }
+      else if(act === "mvreset"){
+        if(!el.classList.contains("armed")){
+          el.classList.add("armed"); el.textContent = "再按一次：全部天數回到原本順序";
+          setTimeout(function(){ if(el.isConnected){ el.classList.remove("armed"); el.textContent = "恢復原本的天數順序"; } }, 3000);
+          return;
+        }
+        var byCid = {}; DAYS.forEach(function(x){ byCid[x.cid] = takeContent(x); });
+        DAYS.forEach(function(x){ putContent(x, byCid[x.id]); });
+        saveOrder(); editingDay = null; DAYS.forEach(renderDay);
+      }
+      else if(act === "badd" || act === "tadd"){
+        var row = el.closest(".rowadd");
+        if(act === "badd"){
+          var bn = row.querySelector('[data-f=bn]'), bnote = row.querySelector('[data-f=bnote]');
+          if(!bn.value.trim()){ bn.focus(); return; }
+          d.buys.push({n:bn.value.trim(), note:bnote.value.trim(), w:[]}); itinSave(d, "buys");
+        } else {
+          var tip = row.querySelector('[data-f=tip]');
+          if(!tip.value.trim()){ tip.focus(); return; }
+          d.tips.push(tip.value.trim()); itinSave(d, "tips");
+        }
+        renderDay(d);
+        var again = document.querySelector('#'+d.id+' [data-f='+(act === "badd" ? "bn" : "tip")+']'); if(again) again.focus();
+      }
+      else if(act === "bdel" || act === "tdel"){
+        if(!el.classList.contains("armed")){
+          el.classList.add("armed"); el.textContent = "刪除?";
+          setTimeout(function(){ if(el.isConnected){ el.classList.remove("armed"); el.textContent = "×"; } }, 2500);
+          return;
+        }
+        var part = act === "bdel" ? "buys" : "tips";
+        d[part].splice(+el.getAttribute("data-i"), 1); itinSave(d, part); renderDay(d);
+      }
       else if(act === "add"){ open(d, -1); }
       else if(act === "edit"){ ev.stopPropagation(); open(d, +el.getAttribute("data-i")); }
       else if(act === "del"){
@@ -1855,11 +2057,11 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
       }
       else if(act === "reset"){
         if(!el.classList.contains("armed")){
-          el.classList.add("armed"); el.textContent = "再按一次：自己改的會全部清掉";
+          el.classList.add("armed"); el.textContent = "再按一次：這天自己改的行程、手信、提醒都會清掉";
           setTimeout(function(){ if(el.isConnected){ el.classList.remove("armed"); el.textContent = "恢復這天的預設行程"; } }, 3000);
           return;
         }
-        d.items = JSON.parse(ITIN_DEFAULT[d.id]); delete itinSaved[d.id];
+        var def = JSON.parse(ITIN_DEFAULT[d.cid]); d.items = def.items; d.tips = def.tips; d.buys = def.buys; delete itinSaved[d.cid];
         try { localStorage.setItem(ITIN_KEY, JSON.stringify(itinSaved)); } catch(e){}
         renderDay(d);
       }
@@ -1872,10 +2074,9 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
     var $ = function(id){ return document.getElementById(id); };
     var HT_KEY = "tw2027-hotels-v2";
     var HT_DEFAULT = [
-      {id:"h1", city:"台北", area:"台北車站附近", inD:"2027-04-23", outD:"2027-04-24", name:"", code:"", note:"第一晚。隔天一早搭高鐵去台中，住車站附近最方便。"},
-      {id:"h2", city:"台中", area:"台中車站附近", inD:"2027-04-24", outD:"2027-04-26", name:"", code:"", note:"步行約 6 分鐘到日月潭巴士站，晚上逛宮原眼科、一中街也近。"},
-      {id:"h3", city:"花蓮", area:"花蓮火車站附近", inD:"2027-04-26", outD:"2027-04-28", name:"", code:"", note:"太魯閣包車接送、晚上去東大門夜市都方便，有免費單車更好。"},
-      {id:"h4", city:"台北", area:"台北車站附近", inD:"2027-04-28", outD:"2027-05-01", name:"", code:"", note:"連住 3 晚不用換飯店。5/1 退房後可寄放行李，搭機場捷運到桃園 T1 約 35–40 分鐘。"}
+      {id:"h1", city:"台北", area:"台北車站附近", inD:"2027-04-23", outD:"2027-04-24", name:"", code:"", note:"第一晚。隔天一早搭火車去花蓮，住車站附近最方便。"},
+      {id:"h2", city:"花蓮", area:"花蓮火車站附近", inD:"2027-04-24", outD:"2027-04-26", name:"", code:"", note:"去花蓮港賞鯨、七星潭、東大門夜市都近，有免費單車更好。"},
+      {id:"h3", city:"台北", area:"台北車站附近", inD:"2027-04-26", outD:"2027-05-01", name:"", code:"", note:"連住 5 晚不用換飯店。去西門町、淡水、九份都方便；5/1 退房後可寄放行李，搭機場捷運到桃園 T1 約 35–40 分鐘。"}
     ];
     var hotels = null, custom = false;
     try { var raw = JSON.parse(localStorage.getItem(HT_KEY) || "null"); if(Array.isArray(raw)){ hotels = raw; custom = true; } } catch(e){}
@@ -2274,6 +2475,8 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
         items.forEach(function(it, i){ if(old[i]) it.done = true; });
       } catch(e){}
     }
+    var defs = defaults(), defMap = {}; defs.forEach(function(x){ defMap[x.id] = x; });
+    items.forEach(function(it){ var d = defMap[it.id]; if(d){ it.t = d.t; it.l = d.l; } });
     function save(){ try { localStorage.setItem(opt.key, JSON.stringify(items)); } catch(e){} }
     function render(){
       listEl.innerHTML = "";
